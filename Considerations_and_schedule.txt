@@ -1,0 +1,37 @@
+######################################################
+
+1) CONVOLUTIONAL NEURAL NETWORK PER CLASSIFICATION DIRETTA
+	Vedere le due repository 
+
+	https://github.com/guillaume-chevalier/HAR-stacked-residual-bidir-LSTMs
+	
+	https://github.com/Koutoulakis/Deep-Learning-for-Human-Activity-Recognition
+
+
+
+
+2) CONVOLUTIONAL NEURAL NETWORK PER FEATURE EXTRACTION + SVM 
+
+
+
+3) RECURRENT NEURAL NETWORK
+
+
+
+
+
+
+DOMANDE:
+
+1) MISALINGMENTS MEASURES. >> RISOLTA 
+
+2) Capire bene “Figure 2” “Deep Convolutional Neural Networks On Multichannel Time Series For Human Activity Recognition” 
+
+
+
+
+CONSIDERAZIONI SUI PAPER: 
+
+1) Nei paper non mention come vengono considerati i Valori macnanti
+
+2) 
