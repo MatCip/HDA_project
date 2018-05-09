@@ -22,12 +22,49 @@ for i=1:size(data1,1)
     labelled_data1(i,end) = find(classes == data1(i,labels_col));
 end
 
+%% treat the NaN
+% column 34 35 36 are always NaN
+new_labelled_data = labelled_data1(:,[1:33 37:end]);
+
+% for column (i.e: temporal data acquired by a sensor)
+% replace NaN with last valid value in the sequence
+nan_labelled_data = zeros(size(new_labelled_data,1), size(new_labelled_data,2));
+for i=1:size(new_labelled_data,2)
+    
+    col = new_labelled_data(:,i);
+    idxs = find(isnan(col));
+    if ~isempty(idxs)
+        last = col(idxs(1)-1);
+        for j=1:length(idxs)
+            col(idxs(j)) = last;
+            if j < length(idxs) 
+                if idxs(j+1) - idxs(j) > 1
+                    last = col7(idxs(j+1)-1);
+                end
+            end
+        end
+    end
+    nan_labelled_data(:,i) = col;
+end
+
 %% 
 % export data on  a csv file
 exp_filename = 'drill1Opportunity.csv';
-csvwrite(exp_filename, labelled_data1);
+csvwrite(exp_filename, nan_labelled_data);
 
 
+%% 
 
+col7 = new_labelled_data(:,7);
+idxs = find(isnan(col7));
+last = col7(idxs(1)-1);
+for i=1:length(idxs)
+    col7(idxs(i)) = last;
+    if i < length(idxs) 
+        if idxs(i+1) - idxs(i) > 1
+            last = col7(idxs(i+1)-1);
+        end
+    end
+end
 
 
