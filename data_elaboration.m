@@ -39,7 +39,7 @@ for i=1:size(new_labelled_data,2)
             col(idxs(j)) = last;
             if j < length(idxs) 
                 if idxs(j+1) - idxs(j) > 1
-                    last = col7(idxs(j+1)-1);
+                    last = col(idxs(j+1)-1);
                 end
             end
         end
@@ -51,20 +51,4 @@ end
 % export data on  a csv file
 exp_filename = 'drill1Opportunity.csv';
 csvwrite(exp_filename, nan_labelled_data);
-
-
-%% 
-
-col7 = new_labelled_data(:,7);
-idxs = find(isnan(col7));
-last = col7(idxs(1)-1);
-for i=1:length(idxs)
-    col7(idxs(i)) = last;
-    if i < length(idxs) 
-        if idxs(i+1) - idxs(i) > 1
-            last = col7(idxs(i+1)-1);
-        end
-    end
-end
-
 
