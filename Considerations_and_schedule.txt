@@ -35,3 +35,14 @@ CONSIDERAZIONI SUI PAPER:
 1) Nei paper non mention come vengono considerati i Valori macnanti
 
 2) 
+
+
+
+
+
+
+13/05:
+
+- Task A >> solo su ADL >>> Fare pre-processing su ADL . 
+	TRAINING SU ADL1,ADL2, ADL3 
+	TEST SU ADL1 , ADL2, ADL3 

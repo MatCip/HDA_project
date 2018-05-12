@@ -1,66 +1,4 @@
-
-
-%% prepare data for python and tensorflow
-
-[~, directory_name] = uigetfile('*.dat');
-% data1 = load(fullfile(directory_name, 'S1-ADL1.dat'));
-data2 = load(fullfile(directory_name, 'S1-ADL2.dat'));
-% data3 = load(fullfile(directory_name, 'S1-ADL3.dat'));
-% data4 = load(fullfile(directory_name, 'S1-ADL4.dat'));
-% data5 = load(fullfile(directory_name, 'S1-ADL5.dat'));
-%%
-% vector of classes
-% 0 corresponds to the non-activity class
-classes = [0 101 102 104 105];
-
-% labelled data is data without time column and labels 1-18 (number of classes)
-num_cols = 114; % 113 are feature columns - last one labels columns
-labels_col = 115;
-
-
-% labelled_data1 = zeros(size(data1,1), num_cols);
-% data=data1;
-% 
-% for i=1:size(data,1)
-%         labelled_data1(i,1:end-1) = data(i,2:num_cols);
-%         labelled_data1(i,end) = find(classes == data(i,labels_col));
-% end
-
-
-labelled_data2 = zeros(size(data2,1), num_cols);
-data=data2;
-
-for i=1:size(data,1)
-        labelled_data2(i,1:end-1) = data(i,2:num_cols);
-        labelled_data2(i,end) = find(classes == data(i,labels_col));
-end
-
-% 
-% labelled_data3 = zeros(size(data3,1), num_cols);
-% data=data3;
-% 
-% for i=1:size(data,1)
-%         labelled_data3(i,1:end-1) = data(i,2:num_cols);
-%         labelled_data3(i,end) = find(classes == data(i,labels_col));
-% end
-% 
-% 
-% labelled_data4 = zeros(size(data4,1), num_cols);
-% data=data4;
-% for i=1:size(data,1)
-%         labelled_data4(i,1:end-1) = data(i,2:num_cols);
-%         labelled_data4(i,end) = find(classes == data(i,labels_col));
-% end
-% 
-
-%% treat the NaN
-% column 34 35 36 are always NaN
-% new_labelled_data = labelled_data1;
-% nan_labelled_data=clean_NAN(new_labelled_data);
-% exp_filename = 'ADL1Opportunity_locomotion.csv';
-% csvwrite(exp_filename, nan_labelled_data);
-% % 
-nan_labelled_data=clean_NAN(labelled_data2);
+nan_labelled_data=clean_NAN(new_labelled_data1);
 exp_filename = 'ADL2Opportunity_locomotion.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
@@ -84,16 +22,14 @@ csvwrite(exp_filename, nan_labelled_data);
 function nan_labelled_data=clean_NAN(new_labelled_data)
 nan_labelled_data = zeros(size(new_labelled_data,1), size(new_labelled_data,2));
 for i=1:size(new_labelled_data,2)
-    disp('Processing column')
-    disp(i)
+   
      %select the column
      
     col = new_labelled_data(:,i);
     indexes=1:length(col);
     idxs = find(isnan(col));
-    disp(length(idxs))
-    disp(length(col))
-    if(length(idxs)<0.8*length(col)) %check if the column is composed whole by NaN
+    
+    if(length(idxs)~=length(col)) %check if the column is composed whole by NaN
     if ~isempty(idxs)        %  %check if there is no NaN Value
         
         if(idxs(1)==1) % if it is the first 
@@ -101,7 +37,7 @@ for i=1:size(new_labelled_data,2)
         else
             start_index=1;
         end
- 
+        disp(idxs(end))
         if(idxs(end)==length(col)) % if the last index is Nan
            last_index=get_last_valid_value(idxs,length(idxs));   % get the last Value
         else
@@ -152,7 +88,8 @@ end
 function next_index=get_next_valid_value(idxs,index)
    j=idxs(index);
    i=index;
- 
+   disp(i)
+   disp(j)
    while((idxs(i)==j))
       j=j+1;
       i=i+1;
