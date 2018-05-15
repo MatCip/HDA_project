@@ -1,5 +1,5 @@
-nan_labelled_data=clean_NAN(new_labelled_data1);
-exp_filename = 'ADL2Opportunity_locomotion.csv';
+nan_labelled_data=clean_NAN(vector);
+exp_filename='test.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 % 
@@ -18,18 +18,19 @@ csvwrite(exp_filename, nan_labelled_data);
 %% 
 
 
-
 function nan_labelled_data=clean_NAN(new_labelled_data)
 nan_labelled_data = zeros(size(new_labelled_data,1), size(new_labelled_data,2));
 for i=1:size(new_labelled_data,2)
-   
+    disp('Processing column: ')
+    disp(i)
      %select the column
      
     col = new_labelled_data(:,i);
     indexes=1:length(col);
     idxs = find(isnan(col));
-    
-    if(length(idxs)~=length(col)) %check if the column is composed whole by NaN
+    disp('Number of NaNs detected: ')
+    disp(length(idxs))
+    if(length(idxs)<0.8*length(col)) %check if the column is composed whole by NaN
     if ~isempty(idxs)        %  %check if there is no NaN Value
         
         if(idxs(1)==1) % if it is the first 
@@ -37,11 +38,11 @@ for i=1:size(new_labelled_data,2)
         else
             start_index=1;
         end
-        disp(idxs(end))
+ 
         if(idxs(end)==length(col)) % if the last index is Nan
            last_index=get_last_valid_value(idxs,length(idxs));   % get the last Value
         else
-            last_index=lenght(idxs);
+            last_index=0;
         end
         
         idxs_1=idxs(start_index:last_index);
@@ -65,10 +66,21 @@ for i=1:size(new_labelled_data,2)
             
             j=next_index+1;
         end
-    order=10;
-    k_step_ahead=length(col)-idxs(last_index)+1;
-    forcasted_signal=get_predicted_Nan_series(col(1:idxs(last_index)-1),k_step_ahead,order);
-    col=cat(1,col(1:idxs(last_index)-1),forcasted_signal);
+        if(last_index~=0)%check last
+            x1=idxs(last_index)-1;
+            x2=length(col);
+            y1=col(x1);
+            y2=col(1);
+            coefficients = polyfit([x1, x2], [y1, y2], 1);
+            m = coefficients (1);
+            q = coefficients (2);
+            index_v=(x1+1):(length(col));
+            col(index_v)=m*index_v+q;
+        end
+    
+   
+%     forcasted_signal=get_predicted_Nan_series(col(1:idxs(last_index)-1),k_step_ahead,order);
+%     col=cat(1,col(1:idxs(last_index)-1),forcasted_signal);
     end
     nan_labelled_data(:,i) = col;
     end
@@ -79,8 +91,18 @@ end
 
 
 function forcasted_signal=get_predicted_Nan_series(signal,k_step_ahead,order)
+    number_of_iterations=floor(k_step_ahead/(3*order));
+    forcasted_signal=zeros(k_step_ahead,1);
     system=ar(signal,order);
-    forcasted_signal = forecast(system,signal,k_step_ahead);
+    for i=1:number_of_iterations
+       disp(i)
+       forcasted_signal((3*order*(i-1)+1):(3*order*(i)))= forecast(system,signal(1:(length(signal)-order*i)),3*order);
+    end
+    last_processed=3*order*(i);
+    forcasted_signal((last_processed+1):k_step_ahead)=forecast(system,signal,k_step_ahead-last_processed);
+    
+    
+  
     
 
 end
@@ -88,8 +110,7 @@ end
 function next_index=get_next_valid_value(idxs,index)
    j=idxs(index);
    i=index;
-   disp(i)
-   disp(j)
+ 
    while((idxs(i)==j))
       j=j+1;
       i=i+1;
