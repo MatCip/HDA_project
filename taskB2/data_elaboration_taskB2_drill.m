@@ -7,7 +7,7 @@ data1 = load(fullfile(directory_name, 'S1-Drill.dat'));
 data2 = load(fullfile(directory_name, 'S2-Drill.dat'));
 data3 = load(fullfile(directory_name, 'S3-Drill.dat'));
 data4 = load(fullfile(directory_name, 'S4-Drill.dat'));
-%data5 = load(fullfile(directory_name, 'S5-Drill.dat'));
+
 %%
 % vector of classes
 % 0 corresponds to the non-activity class
@@ -16,7 +16,6 @@ classes = [0 506616 506617 504616 504617 506620 504620 506605 504605 506619 5046
 % labelled data is data without time column and labels 1-18 (number of classes)
 num_cols = 114; % 113 are feature columns - last one labels columns
 labels_col = 116;
-
 
 labelled_data1 = zeros(size(data1,1), num_cols);
 data=data1;
@@ -52,51 +51,32 @@ for i=1:size(data,1)
         labelled_data4(i,end) = find(classes == data(i,labels_col));
 end
 
-
-% labelled_data5 = zeros(size(data5,1), num_cols);
-% data=data5;
-% for i=1:size(data,1)
-%         labelled_data5(i,1:end-1) = data(i,2:num_cols);
-%         labelled_data5(i,end) = find(classes == data(i,labels_col));
-% end
-
-
-
 %% treat the NaN
 % column 34 35 36 are always NaN
 
 disp('Processing column: ')
 new_labelled_data = labelled_data1;
 nan_labelled_data=clean_NAN(new_labelled_data);
-exp_filename = 'S1-drill.csv';
+exp_filename = 'Drill1Opportunity_taskB2.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 % 
 nan_labelled_data=clean_NAN(labelled_data2);
-exp_filename = 'S2-drill.csv';
+exp_filename = 'Drill2Opportunity_taskB2.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 
 new_labelled_data = labelled_data3;
 nan_labelled_data=clean_NAN(new_labelled_data);
-exp_filename = 'S3-drill.csv';
+exp_filename = 'Drill3Opportunity_taskB2.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 new_labelled_data = labelled_data4;
 nan_labelled_data=clean_NAN(new_labelled_data);
-exp_filename = 'S4-drill.csv';
+exp_filename = 'Drill4Opportunity_taskB2.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
-
-% new_labelled_data = labelled_data5;
-% nan_labelled_data=clean_NAN(new_labelled_data);
-% exp_filename = 'S5-drill.csv';
-% csvwrite(exp_filename, nan_labelled_data);
-% for column (i.e: temporal data acquired by a sensor)
-% replace NaN with last valid value in the sequence
-
 %% 
-
 
 function nan_labelled_data=clean_NAN(new_labelled_data)
 nan_labelled_data=zeros(size(new_labelled_data));
@@ -186,9 +166,6 @@ end
 
 end 
 
-
-
-
 function forcasted_signal=get_predicted_Nan_series(signal,k_step_ahead,order)
     number_of_iterations=floor(k_step_ahead/(3*order));
     forcasted_signal=zeros(k_step_ahead,1);
@@ -200,13 +177,9 @@ function forcasted_signal=get_predicted_Nan_series(signal,k_step_ahead,order)
     last_processed=3*order*(i);
     forcasted_signal((last_processed+1):k_step_ahead)=forecast(system,signal,k_step_ahead-last_processed);
     
-    
-  
-    
-
 end    
     
-    function next_index=get_next_valid_value(idxs,index)
+function next_index=get_next_valid_value(idxs,index)
    j=idxs(index);
    i=index;
  
@@ -216,10 +189,7 @@ end
    end
    next_index=i-1;
     
- end
-
-
-
+end
 
 function last_index=get_last_valid_value(idxs,index)
    j=idxs(index);
