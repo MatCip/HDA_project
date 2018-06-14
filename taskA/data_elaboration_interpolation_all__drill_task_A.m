@@ -2,12 +2,17 @@
 
 %% prepare data for python and tensorflow
 
+%Subject 1 
+
 [~, directory_name] = uigetfile('*.dat');
-data1 = load(fullfile(directory_name, 'S1-ADL1.dat'));
-data2 = load(fullfile(directory_name, 'S1-ADL2.dat'));
-data3 = load(fullfile(directory_name, 'S1-ADL3.dat'));
-data4 = load(fullfile(directory_name, 'S1-ADL4.dat'));
-data5 = load(fullfile(directory_name, 'S1-ADL5.dat'));
+data1 = load(fullfile(directory_name, 'S1-Drill.dat'));
+data2 = load(fullfile(directory_name, 'S2-Drill.dat'));
+data3 = load(fullfile(directory_name, 'S3-Drill.dat'));
+data4 = load(fullfile(directory_name, 'S4-Drill.dat'));
+
+
+
+
 %%
 % vector of classes
 % 0 corresponds to the non-activity class
@@ -53,53 +58,43 @@ for i=1:size(data,1)
 end
 
 
-labelled_data5 = zeros(size(data5,1), num_cols);
-data=data5;
-for i=1:size(data,1)
-        labelled_data5(i,1:end-1) = data(i,2:num_cols);
-        labelled_data5(i,end) = find(classes == data(i,labels_col));
-end
 
 
-
-%% treat the NaN
+% treat the NaN
 % column 34 35 36 are always NaN
 
 disp('Processing column: ')
 new_labelled_data = labelled_data1;
 nan_labelled_data=clean_NAN(new_labelled_data);
-exp_filename = 'ADL1Opportunity_locomotion.csv';
+exp_filename = 'Drill1Opportunity_locomotion.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 % 
 nan_labelled_data=clean_NAN(labelled_data2);
-exp_filename = 'ADL2Opportunity_locomotion.csv';
+exp_filename = 'Drill2Opportunity_locomotion.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 
 new_labelled_data = labelled_data3;
 nan_labelled_data=clean_NAN(new_labelled_data);
-exp_filename = 'ADL3Opportunity_locomotion.csv';
+exp_filename = 'Drill3Opportunity_locomotion.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 new_labelled_data = labelled_data4;
 nan_labelled_data=clean_NAN(new_labelled_data);
-exp_filename = 'ADL4Opportunity_locomotion.csv';
+exp_filename = 'Drill4Opportunity_locomotion.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 
-new_labelled_data = labelled_data5;
-nan_labelled_data=clean_NAN(new_labelled_data);
-exp_filename = 'ADL5Opportunity_locomotion.csv';
-csvwrite(exp_filename, nan_labelled_data);
 % for column (i.e: temporal data acquired by a sensor)
 % replace NaN with last valid value in the sequence
+
 
 %% 
 
 
 function nan_labelled_data=clean_NAN(new_labelled_data)
-cont=1;
+nan_labelled_data=zeros(size(new_labelled_data));
 for i=1:size(new_labelled_data,2)
     disp('Processing column: ')
     disp(i)
@@ -161,6 +156,18 @@ for i=1:size(new_labelled_data,2)
             index_v=(x1+1):(length(col));
             col(index_v)=m*index_v+q;
         end
+        
+        if(start_index~=1)%check first
+            x1=length(col);
+            x2=idxs(start_index)+1;
+            y1=col(x1);
+            y2=col(x2);
+            coefficients = polyfit([x1, x2], [y1, y2], 1);
+            m = coefficients (1);
+            q = coefficients (2);
+            index_v=(1):(x2-1);
+            col(index_v)=m*index_v+q;
+        end
     
     
 %     forcasted_signal=get_predicted_Nan_series(col(1:idxs(last_index)-1),k_step_ahead,order);
@@ -168,7 +175,7 @@ for i=1:size(new_labelled_data,2)
     end
    
     nan_labelled_data(:,i)= col;
-    cont=cont+1;
+ 
     end
 end
 
@@ -192,13 +199,13 @@ function forcasted_signal=get_predicted_Nan_series(signal,k_step_ahead,order)
   
     
 
-end
-
-function next_index=get_next_valid_value(idxs,index)
+end    
+    
+    function next_index=get_next_valid_value(idxs,index)
    j=idxs(index);
    i=index;
  
-   while((idxs(i)==j))
+   while( i<=length(idxs) && (idxs(i)==j) )
       j=j+1;
       i=i+1;
    end
