@@ -392,7 +392,7 @@ csvwrite(exp_filename, nan_labelled_data);
 
 
 function nan_labelled_data=clean_NAN(new_labelled_data)
-cont=1;
+nan_labelled_data=zeros(size(new_labelled_data));
 for i=1:size(new_labelled_data,2)
     disp('Processing column: ')
     disp(i)
@@ -454,6 +454,18 @@ for i=1:size(new_labelled_data,2)
             index_v=(x1+1):(length(col));
             col(index_v)=m*index_v+q;
         end
+        
+        if(start_index~=1)%check first
+            x1=length(col);
+            x2=idxs(start_index)+1;
+            y1=col(x1);
+            y2=col(x2);
+            coefficients = polyfit([x1, x2], [y1, y2], 1);
+            m = coefficients (1);
+            q = coefficients (2);
+            index_v=(1):(x2-1);
+            col(index_v)=m*index_v+q;
+        end
     
     
 %     forcasted_signal=get_predicted_Nan_series(col(1:idxs(last_index)-1),k_step_ahead,order);
@@ -461,7 +473,7 @@ for i=1:size(new_labelled_data,2)
     end
    
     nan_labelled_data(:,i)= col;
-    cont=cont+1;
+ 
     end
 end
 
@@ -485,13 +497,13 @@ function forcasted_signal=get_predicted_Nan_series(signal,k_step_ahead,order)
   
     
 
-end
-
-function next_index=get_next_valid_value(idxs,index)
+end    
+    
+    function next_index=get_next_valid_value(idxs,index)
    j=idxs(index);
    i=index;
  
-   while((idxs(i)==j))
+   while( i<=length(idxs) && (idxs(i)==j) )
       j=j+1;
       i=i+1;
    end
