@@ -53,7 +53,7 @@ interpolated_data=fillmissing(check_number_nan(labelled_data2), 'linear',1, 'End
 exp_filename = 'Drill2Opportunity_taskB2.csv';
 csvwrite(exp_filename, interpolated_data);
 
-interpolated_data=fillmissing(lcheck_number_nan(labelled_data3), 'linear',1, 'EndValues', 'previous');
+interpolated_data=fillmissing(check_number_nan(labelled_data3), 'linear',1, 'EndValues', 'previous');
 exp_filename = 'Drill3Opportunity_taskB2.csv';
 csvwrite(exp_filename, interpolated_data);
 
