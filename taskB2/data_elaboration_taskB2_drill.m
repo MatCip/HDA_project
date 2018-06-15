@@ -14,6 +14,10 @@ classes = [0 506616 506617 504616 504617 506620 504620 506605 504605 506619 5046
 num_cols = 114; % 113 are feature columns - last one labels columns
 labels_col = 116;
 
+% INTERPOLATION
+method = 'pchip';
+end_values = 'nearest';
+
 labelled_data1 = zeros(size(data1,1), num_cols);
 data=data1;
 for i=1:size(data,1)
@@ -42,21 +46,18 @@ for i=1:size(data,1)
         labelled_data4(i,end) = find(classes == data(i,labels_col));
 end
 
-%% treat the NaN
-
-% fillmissing(A,'linear',2,'EndValues','nearest')
-interpolated_data=fillmissing(check_number_nan(labelled_data1), 'linear',1, 'EndValues', 'previous');
+interpolated_data=fillmissing(check_number_nan(labelled_data1), method,1, 'EndValues', end_values);
 exp_filename = 'Drill1Opportunity_taskB2.csv';
 csvwrite(exp_filename, interpolated_data);
 
-interpolated_data=fillmissing(check_number_nan(labelled_data2), 'linear',1, 'EndValues', 'previous');
+interpolated_data=fillmissing(check_number_nan(labelled_data2), method,1, 'EndValues', end_values);
 exp_filename = 'Drill2Opportunity_taskB2.csv';
 csvwrite(exp_filename, interpolated_data);
 
-interpolated_data=fillmissing(check_number_nan(labelled_data3), 'linear',1, 'EndValues', 'previous');
+interpolated_data=fillmissing(check_number_nan(labelled_data3), method,1, 'EndValues', end_values);
 exp_filename = 'Drill3Opportunity_taskB2.csv';
 csvwrite(exp_filename, interpolated_data);
 
-interpolated_data=fillmissing(check_number_nan(labelled_data4), 'linear',1, 'EndValues', 'previous');
+interpolated_data=fillmissing(check_number_nan(labelled_data4), method,1, 'EndValues', end_values);
 exp_filename = 'Drill4Opportunity_taskB2.csv';
 csvwrite(exp_filename, interpolated_data);
