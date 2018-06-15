@@ -5,6 +5,7 @@
 %Subject 1 
 
 [~, directory_name] = uigetfile('*.dat');
+
 data1 = load(fullfile(directory_name, 'S1-ADL1.dat'));
 data2 = load(fullfile(directory_name, 'S1-ADL2.dat'));
 data3 = load(fullfile(directory_name, 'S1-ADL3.dat'));
@@ -70,29 +71,32 @@ end
 % treat the NaN
 % column 34 35 36 are always NaN
 
-disp('Processing column: ')
+disp('Processing Subject 1..')
+disp('ADL1')
 new_labelled_data = labelled_data1;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL1Opportunity_locomotion_S1.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 % 
+disp('ADL2')
 nan_labelled_data=clean_NAN(labelled_data2);
 exp_filename = 'ADL2Opportunity_locomotion_S1.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
-
+disp('ADL3')
 new_labelled_data = labelled_data3;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL3Opportunity_locomotion_S1.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
+disp('ADL4')
 new_labelled_data = labelled_data4;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL4Opportunity_locomotion_S1.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
-
+disp('ADL5')
 new_labelled_data = labelled_data5;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL5Opportunity_locomotion_S1.csv';
@@ -167,29 +171,33 @@ end
 % treat the NaN
 % column 34 35 36 are always NaN
 
-disp('Processing column: ')
+disp('Processing Subject 2..')
+disp('ADL1')
 new_labelled_data = labelled_data1;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL1Opportunity_locomotion_S2.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
+
 % 
+disp('ADL2')
 nan_labelled_data=clean_NAN(labelled_data2);
 exp_filename = 'ADL2Opportunity_locomotion_S2.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
-
+disp('ADL3')
 new_labelled_data = labelled_data3;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL3Opportunity_locomotion_S2.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
+disp('ADL4')
 new_labelled_data = labelled_data4;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL4Opportunity_locomotion_S2.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
-
+disp('ADL5')
 new_labelled_data = labelled_data5;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL5Opportunity_locomotion_S2.csv';
@@ -198,6 +206,7 @@ csvwrite(exp_filename, nan_labelled_data);
 
 
 %% Subject 3
+
 
 data1 = load(fullfile(directory_name, 'S3-ADL1.dat'));
 data2 = load(fullfile(directory_name, 'S3-ADL2.dat'));
@@ -264,36 +273,38 @@ end
 % treat the NaN
 % column 34 35 36 are always NaN
 
-disp('Processing column: ')
+disp('Processing Subject 3..')
+disp('ADL1')
 new_labelled_data = labelled_data1;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL1Opportunity_locomotion_S3.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 % 
+disp('ADL2')
 nan_labelled_data=clean_NAN(labelled_data2);
 exp_filename = 'ADL2Opportunity_locomotion_S3.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
-
+disp('ADL3')
 new_labelled_data = labelled_data3;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL3Opportunity_locomotion_S3.csv';
 csvwrite(exp_filename, nan_labelled_data);
-
+disp('ADL4')
 new_labelled_data = labelled_data4;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL4Opportunity_locomotion_S3.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
-
+disp('ADL5')
 new_labelled_data = labelled_data5;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL5Opportunity_locomotion_S3.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 
-%% Subject 3
+%% Subject 4
 
 data1 = load(fullfile(directory_name, 'S4-ADL1.dat'));
 data2 = load(fullfile(directory_name, 'S4-ADL2.dat'));
@@ -360,29 +371,32 @@ end
 % treat the NaN
 % column 34 35 36 are always NaN
 
-disp('Processing column: ')
+disp('Processing Subject 4..')
+disp('ADL1')
 new_labelled_data = labelled_data1;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL1Opportunity_locomotion_S4.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
 % 
+disp('ADL2')
 nan_labelled_data=clean_NAN(labelled_data2);
 exp_filename = 'ADL2Opportunity_locomotion_S4.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
-
+disp('ADL3')
 new_labelled_data = labelled_data3;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL3Opportunity_locomotion_S4.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
+disp('ADL4')
 new_labelled_data = labelled_data4;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL4Opportunity_locomotion_S4.csv';
 csvwrite(exp_filename, nan_labelled_data);
 
-
+disp('ADL5')
 new_labelled_data = labelled_data5;
 nan_labelled_data=clean_NAN(new_labelled_data);
 exp_filename = 'ADL5Opportunity_locomotion_S4.csv';
@@ -394,8 +408,8 @@ csvwrite(exp_filename, nan_labelled_data);
 function nan_labelled_data=clean_NAN(new_labelled_data)
 nan_labelled_data=zeros(size(new_labelled_data));
 for i=1:size(new_labelled_data,2)
-    disp('Processing column: ')
-    disp(i)
+%     disp('Processing column: ')
+%     disp(i)
 
     
      %select the column
@@ -403,11 +417,11 @@ for i=1:size(new_labelled_data,2)
     col = new_labelled_data(:,i);
     indexes=1:length(col);
     idxs = find(isnan(col));
-    disp('Number of NaNs detected: ')
-    disp(length(idxs))
+%     disp('Number of NaNs detected: ')
+%     disp(length(idxs))
    
    
-    if(length(idxs)<0.95*length(col)) %check if the column is composed whole by NaN
+   if(length(idxs)<0.95*length(col)) %check if the column is composed whole by NaN
     if ~isempty(idxs)        %  %check if there is no NaN Value
         
         if(idxs(1)==1) % if it is the first 
@@ -419,12 +433,12 @@ for i=1:size(new_labelled_data,2)
         if(idxs(end)==length(col)) % if the last index is Nan
            last_index=get_last_valid_value(idxs,length(idxs));   % get the last Value
         else
-            last_index=0;
+            last_index=length(idxs);
         end
         
         idxs_1=idxs(start_index:last_index);
         j=1;
-        next_index=start_index;
+        next_index=2;
         while(next_index+1<length(idxs_1))
            
             next_index=get_next_valid_value(idxs_1,j);
@@ -443,11 +457,15 @@ for i=1:size(new_labelled_data,2)
             
             j=next_index+1;
         end
-        if(last_index~=0)%check last
+        if(last_index~=length(idxs) || last_index==1)%check last
             x1=idxs(last_index)-1;
             x2=length(col);
             y1=col(x1);
-            y2=col(start_index+1);
+            if(start_index~=1)
+                y2=col(idxs(start_index)+1);
+            else
+                y2=col(1);
+            end
             coefficients = polyfit([x1, x2], [y1, y2], 1);
             m = coefficients (1);
             q = coefficients (2);
@@ -456,10 +474,15 @@ for i=1:size(new_labelled_data,2)
         end
         
         if(start_index~=1)%check first
-            x1=length(col);
+            x1=1;
             x2=idxs(start_index)+1;
-            y1=col(x1);
+            if(start_index==last_index)
+             y1=col(idxs(last_index)+1);
+            else
+             y1=col(idxs(last_index)-1);
+            end
             y2=col(x2);
+            
             coefficients = polyfit([x1, x2], [y1, y2], 1);
             m = coefficients (1);
             q = coefficients (2);
@@ -467,16 +490,25 @@ for i=1:size(new_labelled_data,2)
             col(index_v)=m*index_v+q;
         end
     
-    
+  
 %     forcasted_signal=get_predicted_Nan_series(col(1:idxs(last_index)-1),k_step_ahead,order);
 %     col=cat(1,col(1:idxs(last_index)-1),forcasted_signal);
     end
    
     nan_labelled_data(:,i)= col;
+    
+    if(~isempty(find(isnan(col))==1))
+    disp(i);
+    end
  
     end
 end
-
+if(~isempty(find(isnan(nan_labelled_data))==1))
+    disp('Nan detected');
+end
+if(~isempty(find(isinf(nan_labelled_data))==1))
+    disp('Infinict detected');
+end
 end 
 
 
