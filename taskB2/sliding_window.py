@@ -78,18 +78,33 @@ def sliding_window(a,ws,ss = None,flatten = True):
     # the shape of the strided array will be the number of slices in each dimension
     # plus the shape of the window (tuple addition)
     newshape += norm_shape(ws)
+
+    """for i in range(0,np.shape(newshape)[0]):
+        newshape[i]=int(newshape[i])"""
+    newshape=tuple( int(i) for i in newshape)
+    print(newshape)
+
     # the strides tuple will be the array's strides multiplied by step size, plus
     # the array's strides (tuple addition)
     newstrides = norm_shape(np.array(a.strides) * ss) + a.strides
-    strided = ast(a,shape = newshape,strides = newstrides)
+
+    newstrides =tuple(int(i) for i in newstrides)
+    print(newstrides)
+
+    strided = ast(a,shape = newshape, strides =newstrides)
     if not flatten:
         return strided
+
+    print(strided.shape)
 
     # Collapse strided so that it has one more dimension than the window.  I.e.,
     # the new array is a flat list of slices.
     meat = len(ws) if ws.shape else 0
     firstdim = (np.product(newshape[:-meat]),) if ws.shape else ()
+    print(firstdim)
+    print(newshape[-meat:])
     dim = firstdim + (newshape[-meat:])
+    print(dim)
     # remove any dimensions with size 1
     dim = filter(lambda i : i != 1,dim)
     return strided.reshape(dim)
