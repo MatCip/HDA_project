@@ -10,45 +10,44 @@ data4 = load(fullfile(directory_name, 'S1-ADL4.dat'));
 data5 = load(fullfile(directory_name, 'S1-ADL5.dat'));
 
 % 0 corresponds to the non-activity class
-classes = [0 506616 506617 504616 504617 506620 504620 506605 504605 506619 504619 506611 504611 506608 504608 508612 507621 505606];
+classes = [0 406516 406517 404516 404517 406520 404520 406505 404505 406519 404519 406511 404511 406508 404508 408512 407521 405506];
 
 % labelled data is data without time column and labels 1-18 (number of classes)
-num_cols = 114; % 113 are feature columns - last one labels columns
-labels_col = 116;
+keep_cols = [2:46 51:59 64:72 77:85 90:98 103:134]; % 113 are feature columns - last one labels columns
+labels_col = 250;
 
-
-labelled_data1 = zeros(size(data1,1), num_cols);
+labelled_data1 = zeros(size(data1,1), size(keep_cols,2)+1);
 data=data1;
 for i=1:size(data,1)
-        labelled_data1(i,1:end-1) = data(i,2:num_cols);
+        labelled_data1(i,1:end-1) = data(i,keep_cols);
         labelled_data1(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data2 = zeros(size(data2,1), num_cols);
+labelled_data2 = zeros(size(data2,1), size(keep_cols,2)+1);
 data=data2;
 for i=1:size(data,1)
-        labelled_data2(i,1:end-1) = data(i,2:num_cols);
+        labelled_data2(i,1:end-1) = data(i,keep_cols);
         labelled_data2(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data3 = zeros(size(data3,1), num_cols);
+labelled_data3 = zeros(size(data3,1), size(keep_cols,2)+1);
 data=data3;
 for i=1:size(data,1)
-        labelled_data3(i,1:end-1) = data(i,2:num_cols);
+        labelled_data3(i,1:end-1) = data(i,keep_cols);
         labelled_data3(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data4 = zeros(size(data4,1), num_cols);
+labelled_data4 = zeros(size(data4,1), size(keep_cols,2)+1);
 data=data4;
 for i=1:size(data,1)
-        labelled_data4(i,1:end-1) = data(i,2:num_cols);
+        labelled_data4(i,1:end-1) = data(i,keep_cols);
         labelled_data4(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data5 = zeros(size(data5,1), num_cols);
+labelled_data5 = zeros(size(data5,1), size(keep_cols,2)+1);
 data=data5;
 for i=1:size(data,1)
-        labelled_data5(i,1:end-1) = data(i,2:num_cols);
+        labelled_data5(i,1:end-1) = data(i,keep_cols);
         labelled_data5(i,end) = find(classes == data(i,labels_col));
 end
 
@@ -81,38 +80,38 @@ data3 = load(fullfile(directory_name, 'S2-ADL3.dat'));
 data4 = load(fullfile(directory_name, 'S2-ADL4.dat'));
 data5 = load(fullfile(directory_name, 'S2-ADL5.dat'));
 
-labelled_data1 = zeros(size(data1,1), num_cols);
+labelled_data1 = zeros(size(data1,1), size(keep_cols,2)+1);
 data=data1;
 for i=1:size(data,1)
-        labelled_data1(i,1:end-1) = data(i,2:num_cols);
+        labelled_data1(i,1:end-1) = data(i,keep_cols);
         labelled_data1(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data2 = zeros(size(data2,1), num_cols);
+labelled_data2 = zeros(size(data2,1), size(keep_cols,2)+1);
 data=data2;
 for i=1:size(data,1)
-        labelled_data2(i,1:end-1) = data(i,2:num_cols);
+        labelled_data2(i,1:end-1) = data(i,keep_cols);
         labelled_data2(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data3 = zeros(size(data3,1), num_cols);
+labelled_data3 = zeros(size(data3,1), size(keep_cols,2)+1);
 data=data3;
 for i=1:size(data,1)
-        labelled_data3(i,1:end-1) = data(i,2:num_cols);
+        labelled_data3(i,1:end-1) = data(i,keep_cols);
         labelled_data3(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data4 = zeros(size(data4,1), num_cols);
+labelled_data4 = zeros(size(data4,1), size(keep_cols,2)+1);
 data=data4;
 for i=1:size(data,1)
-        labelled_data4(i,1:end-1) = data(i,2:num_cols);
+        labelled_data4(i,1:end-1) = data(i,keep_cols);
         labelled_data4(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data5 = zeros(size(data5,1), num_cols);
+labelled_data5 = zeros(size(data5,1), size(keep_cols,2)+1);
 data=data5;
 for i=1:size(data,1)
-        labelled_data5(i,1:end-1) = data(i,2:num_cols);
+        labelled_data5(i,1:end-1) = data(i,keep_cols);
         labelled_data5(i,end) = find(classes == data(i,labels_col));
 end
 
@@ -145,38 +144,38 @@ data3 = load(fullfile(directory_name, 'S3-ADL3.dat'));
 data4 = load(fullfile(directory_name, 'S3-ADL4.dat'));
 data5 = load(fullfile(directory_name, 'S3-ADL5.dat'));
 
-labelled_data1 = zeros(size(data1,1), num_cols);
+labelled_data1 = zeros(size(data1,1), size(keep_cols,2)+1);
 data=data1;
 for i=1:size(data,1)
-        labelled_data1(i,1:end-1) = data(i,2:num_cols);
+        labelled_data1(i,1:end-1) = data(i,keep_cols);
         labelled_data1(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data2 = zeros(size(data2,1), num_cols);
+labelled_data2 = zeros(size(data2,1), size(keep_cols,2)+1);
 data=data2;
 for i=1:size(data,1)
-        labelled_data2(i,1:end-1) = data(i,2:num_cols);
+        labelled_data2(i,1:end-1) = data(i,keep_cols);
         labelled_data2(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data3 = zeros(size(data3,1), num_cols);
+labelled_data3 = zeros(size(data3,1), size(keep_cols,2)+1);
 data=data3;
 for i=1:size(data,1)
-        labelled_data3(i,1:end-1) = data(i,2:num_cols);
+        labelled_data3(i,1:end-1) = data(i,keep_cols);
         labelled_data3(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data4 = zeros(size(data4,1), num_cols);
+labelled_data4 = zeros(size(data4,1), size(keep_cols,2)+1);
 data=data4;
 for i=1:size(data,1)
-        labelled_data4(i,1:end-1) = data(i,2:num_cols);
+        labelled_data4(i,1:end-1) = data(i,keep_cols);
         labelled_data4(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data5 = zeros(size(data5,1), num_cols);
+labelled_data5 = zeros(size(data5,1), size(keep_cols,2)+1);
 data=data5;
 for i=1:size(data,1)
-        labelled_data5(i,1:end-1) = data(i,2:num_cols);
+        labelled_data5(i,1:end-1) = data(i,keep_cols);
         labelled_data5(i,end) = find(classes == data(i,labels_col));
 end
 
@@ -209,38 +208,38 @@ data3 = load(fullfile(directory_name, 'S4-ADL3.dat'));
 data4 = load(fullfile(directory_name, 'S4-ADL4.dat'));
 data5 = load(fullfile(directory_name, 'S4-ADL5.dat'));
 
-labelled_data1 = zeros(size(data1,1), num_cols);
+labelled_data1 = zeros(size(data1,1), size(keep_cols,2)+1);
 data=data1;
 for i=1:size(data,1)
-        labelled_data1(i,1:end-1) = data(i,2:num_cols);
+        labelled_data1(i,1:end-1) = data(i,keep_cols);
         labelled_data1(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data2 = zeros(size(data2,1), num_cols);
+labelled_data2 = zeros(size(data2,1), size(keep_cols,2)+1);
 data=data2;
 for i=1:size(data,1)
-        labelled_data2(i,1:end-1) = data(i,2:num_cols);
+        labelled_data2(i,1:end-1) = data(i,keep_cols);
         labelled_data2(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data3 = zeros(size(data3,1), num_cols);
+labelled_data3 = zeros(size(data3,1), size(keep_cols,2)+1);
 data=data3;
 for i=1:size(data,1)
-        labelled_data3(i,1:end-1) = data(i,2:num_cols);
+        labelled_data3(i,1:end-1) = data(i,keep_cols);
         labelled_data3(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data4 = zeros(size(data4,1), num_cols);
+labelled_data4 = zeros(size(data4,1), size(keep_cols,2)+1);
 data=data4;
 for i=1:size(data,1)
-        labelled_data4(i,1:end-1) = data(i,2:num_cols);
+        labelled_data4(i,1:end-1) = data(i,keep_cols);
         labelled_data4(i,end) = find(classes == data(i,labels_col));
 end
 
-labelled_data5 = zeros(size(data5,1), num_cols);
+labelled_data5 = zeros(size(data5,1), size(keep_cols,2)+1);
 data=data5;
 for i=1:size(data,1)
-        labelled_data5(i,1:end-1) = data(i,2:num_cols);
+        labelled_data5(i,1:end-1) = data(i,keep_cols);
         labelled_data5(i,end) = find(classes == data(i,labels_col));
 end
 
