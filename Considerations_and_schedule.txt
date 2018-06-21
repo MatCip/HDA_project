@@ -54,4 +54,4 @@ CONSIDERAZIONI SUI PAPER:
 
 
 Task_A( locomotion) : training single subject >>> TRAIN : ( ADL1, ADL2, ADL3, Drill) , TEST: (ADL4,ADL5)
-		      training multi subject  >>> TRAIN : [ S1 (all ADL and drill) , S2(ADL1,ADL2,drill), S3(ADL1,ADL2,drill) ] , VALIDATION=[ S2(ADL3), S3(ADL3)] TEST: [S2(ADL4,ADL5), S3(ADL4,ADL5))], 
+		      training multi subject  >>> TRAIN : [ S1 (all  ADL and drill) , S2(ADL1,ADL2,drill), S3(ADL1,ADL2,drill) ] , VALIDATION=[ S2(ADL3), S3(ADL3)] TEST: [S2(ADL4,ADL5), S3(ADL4,ADL5))], 
