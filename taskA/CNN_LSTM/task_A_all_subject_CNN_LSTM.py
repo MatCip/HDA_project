@@ -8,7 +8,7 @@ from sklearn.metrics import f1_score
 
 import keras as ke
 from keras.models import Sequential, load_model
-from keras.layers import Dense, Conv2D, MaxPooling2D, CuDNNLSTM, Dropout, Reshape, PReLU, ELU, BatchNormalization, Flatten
+from keras.layers import Dense, Conv2D, LSTM, CuDNNLSTM, Dropout, Reshape, PReLU, ELU, BatchNormalization
 from keras import optimizers
 from keras import initializers
 from keras.callbacks import ReduceLROnPlateau, CSVLogger, ModelCheckpoint
@@ -149,28 +149,28 @@ def prepare_data(train_data, val_data, test_data):
 
 print('Importing data...')
 # import train data
-adl_1_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S1.csv",header=None)
-adl_1_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S1.csv",header=None)
-adl_1_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S1.csv",header=None)
-adl_1_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S1.csv",header=None)
-adl_1_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S1.csv",header=None)
-drill_1 = pd.read_csv("../full_dataset/Drill1Opportunity_taskB2.csv",header=None)
-adl_2_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S2.csv",header=None)
-adl_2_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S2.csv",header=None)
-drill_2 = pd.read_csv("../full_dataset/Drill2Opportunity_taskB2.csv",header=None)
-adl_3_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S3.csv",header=None)
-adl_3_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S3.csv",header=None)
-drill_3 = pd.read_csv("../full_dataset/Drill3Opportunity_taskB2.csv",header=None)
+adl_1_1 = pd.read_csv("../ADL1Opportunity_locomotion_S1.csv",header=None)
+adl_1_2 = pd.read_csv("../ADL2Opportunity_locomotion_S1.csv",header=None)
+adl_1_3 = pd.read_csv("../ADL3Opportunity_locomotion_S1.csv",header=None)
+adl_1_4 = pd.read_csv("../ADL4Opportunity_locomotion_S1.csv",header=None)
+adl_1_5 = pd.read_csv("../ADL5Opportunity_locomotion_S1.csv",header=None)
+drill_1 = pd.read_csv("../Drill1Opportunity_locomotion.csv",header=None)
+adl_2_1 = pd.read_csv("../ADL1Opportunity_locomotion_S2.csv",header=None)
+adl_2_2 = pd.read_csv("../ADL2Opportunity_locomotion_S2.csv",header=None)
+drill_2 = pd.read_csv("../Drill2Opportunity_locomotion.csv",header=None)
+adl_3_1 = pd.read_csv("../ADL1Opportunity_locomotion_S3.csv",header=None)
+adl_3_2 = pd.read_csv("../ADL2Opportunity_locomotion_S3.csv",header=None)
+drill_3 = pd.read_csv("../Drill3Opportunity_locomotion.csv",header=None)
 
 # import validation data
-adl_2_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S2.csv",header=None)
-adl_3_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S3.csv",header=None)
+adl_2_3 = pd.read_csv("../ADL3Opportunity_locomotion_S2.csv",header=None)
+adl_3_3 = pd.read_csv("../ADL3Opportunity_locomotion_S3.csv",header=None)
 
 # import test data
-adl_2_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S2.csv",header=None)
-adl_2_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S2.csv",header=None)
-adl_3_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S3.csv",header=None)
-adl_3_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S3.csv",header=None)
+adl_2_4 = pd.read_csv("../ADL4Opportunity_locomotion_S2.csv",header=None)
+adl_2_5 = pd.read_csv("../ADL5Opportunity_locomotion_S2.csv",header=None)
+adl_3_4 = pd.read_csv("../ADL4Opportunity_locomotion_S3.csv",header=None)
+adl_3_5 = pd.read_csv("../ADL5Opportunity_locomotion_S3.csv",header=None)
 
 train_frames = [adl_1_1,adl_1_2,adl_1_3,adl_1_4,adl_1_5,drill_1,adl_2_1,adl_2_2,drill_2,adl_3_1,adl_3_2,drill_3]
 val_frames = [adl_2_3,adl_3_3]
@@ -189,7 +189,7 @@ scaled_train, scaled_val, scaled_test, train_labels, val_labels, test_labels = p
 num_sensors = 113
 window_size = 24
 step_size = 12
-classes = 18
+classes = 5
 
 # segment data in sliding windows of size: window_size
 train_segments, train_labels, val_segments, val_labels, test_segments, test_labels = segment_data(scaled_train, train_labels, scaled_val, val_labels,
@@ -231,17 +231,19 @@ model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides
                  kernel_initializer='glorot_normal',name='4_conv_layer'))
 model.add(PReLU())
 
-model.add(MaxPooling2D(pool_size=(2,1)))
+model.add(Reshape((8, num_filters*num_sensors)))
 
-model.add(Flatten())
-
-model.add(Dense(1024, kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), name='dense_layer_1', activation='elu'))
+model.add(CuDNNLSTM(num_lstm_cells,kernel_initializer='glorot_normal', return_sequences=True, name='1_lstm_layer'))
 
 model.add(Dropout(dropout_prob, name='1_dropout_layer'))
 
-model.add(Dense(256,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), name='dense_layer_2', activation='elu'))
+model.add(CuDNNLSTM(num_lstm_cells,kernel_initializer='glorot_normal',return_sequences=False, name='2_lstm_layer'))
 
 model.add(Dropout(dropout_prob, name='2_dropout_layer'))
+
+model.add(Dense(64,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), name='dense_layer'))
+
+model.add(Dropout(dropout_prob, name='3_dropout_layer'))
 
 model.add(Dense(classes,kernel_initializer='glorot_normal',
                 bias_initializer=initializers.Constant(value=0.1),activation='softmax', name='softmax_layer'))
@@ -291,4 +293,4 @@ print('After other {0} epochs BEST test accuracy is: {1}, and BEST f1-score is {
 open_file = 'results_' + str(sys.argv[1]) + '.pkl'
 print('Saving results to: ' + open_file)
 with open(open_file, 'wb') as f:
-    pk.dump([my_callback.test_acc, my_callback.f1_scores, my_callback.f1_scores_avg, my_callback.f1_scores_epoch], f)
+	pk.dump([my_callback.test_acc, my_callback.f1_scores, my_callback.f1_scores_avg, my_callback.f1_scores_epoch], f)

@@ -149,28 +149,28 @@ def prepare_data(train_data, val_data, test_data):
 
 print('Importing data...')
 # import train data
-adl_1_1 = pd.read_csv("../full_dataset/ADL1Opportunity_locomotion_S1.csv",header=None)
-adl_1_2 = pd.read_csv("../full_dataset/ADL2Opportunity_locomotion_S1.csv",header=None)
-adl_1_3 = pd.read_csv("../full_dataset/ADL3Opportunity_locomotion_S1.csv",header=None)
-adl_1_4 = pd.read_csv("../full_dataset/ADL4Opportunity_locomotion_S1.csv",header=None)
-adl_1_5 = pd.read_csv("../full_dataset/ADL5Opportunity_locomotion_S1.csv",header=None)
-drill_1 = pd.read_csv("../full_dataset/Drill1Opportunity_locomotion_.csv",header=None)
-adl_2_1 = pd.read_csv("../full_dataset/ADL1Opportunity_locomotion_S2.csv",header=None)
-adl_2_2 = pd.read_csv("../full_dataset/ADL2Opportunity_locomotion_S2.csv",header=None)
-drill_2 = pd.read_csv("../full_dataset/Drill2Opportunity_locomotion.csv",header=None)
-adl_3_1 = pd.read_csv("../full_dataset/ADL1Opportunity_locomotion_S3.csv",header=None)
-adl_3_2 = pd.read_csv("../full_dataset/ADL2Opportunity_locomotion_S3.csv",header=None)
-drill_3 = pd.read_csv("../full_dataset/Drill3Opportunity_locomotion.csv",header=None)
+adl_1_1 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL1Opportunity_taskB2_S1.csv",header=None)
+adl_1_2 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL2Opportunity_taskB2_S1.csv",header=None)
+adl_1_3 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL3Opportunity_taskB2_S1.csv",header=None)
+adl_1_4 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL4Opportunity_taskB2_S1.csv",header=None)
+adl_1_5 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL5Opportunity_taskB2_S1.csv",header=None)
+drill_1 = pd.read_csv("../reduced_dataset/IMU_ACC/Drill1Opportunity_taskB2.csv",header=None)
+adl_2_1 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL1Opportunity_taskB2_S2.csv",header=None)
+adl_2_2 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL2Opportunity_taskB2_S2.csv",header=None)
+drill_2 = pd.read_csv("../reduced_dataset/IMU_ACC/Drill2Opportunity_taskB2.csv",header=None)
+adl_3_1 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL1Opportunity_taskB2_S3.csv",header=None)
+adl_3_2 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL2Opportunity_taskB2_S3.csv",header=None)
+drill_3 = pd.read_csv("../reduced_dataset/IMU_ACC/Drill3Opportunity_taskB2.csv",header=None)
 
 # import validation data
-adl_2_3 = pd.read_csv("../full_dataset/ADL3Opportunity_locomotion_S2.csv",header=None)
-adl_3_3 = pd.read_csv("../full_dataset/ADL3Opportunity_locomotion_S3.csv",header=None)
+adl_2_3 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL3Opportunity_taskB2_S2.csv",header=None)
+adl_3_3 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL3Opportunity_taskB2_S3.csv",header=None)
 
 # import test data
-adl_2_4 = pd.read_csv("../full_dataset/ADL4Opportunity_locomotion_2.csv",header=None)
-adl_2_5 = pd.read_csv("../full_dataset/ADL5Opportunity_locomotion_S2.csv",header=None)
-adl_3_4 = pd.read_csv("../full_dataset/ADL4Opportunity_locomotion_S3.csv",header=None)
-adl_3_5 = pd.read_csv("../full_dataset/ADL5Opportunity_locomotion_S3.csv",header=None)
+adl_2_4 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL4Opportunity_taskB2_S2.csv",header=None)
+adl_2_5 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL5Opportunity_taskB2_S2.csv",header=None)
+adl_3_4 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL4Opportunity_taskB2_S3.csv",header=None)
+adl_3_5 = pd.read_csv("../reduced_dataset/IMU_ACC/ADL5Opportunity_taskB2_S3.csv",header=None)
 
 train_frames = [adl_1_1,adl_1_2,adl_1_3,adl_1_4,adl_1_5,drill_1,adl_2_1,adl_2_2,drill_2,adl_3_1,adl_3_2,drill_3]
 val_frames = [adl_2_3,adl_3_3]
@@ -178,15 +178,15 @@ test_frames = [adl_2_4,adl_2_5,adl_3_4,adl_3_5]
 train_data = pd.concat(train_frames)
 val_data = pd.concat(val_frames)
 test_data = pd.concat(test_frames)
-train_data.rename(columns ={113: 'labels'}, inplace =True)
-val_data.rename(columns ={113: 'labels'}, inplace =True)
-test_data.rename(columns ={113: 'labels'}, inplace =True)
+train_data.rename(columns ={21: 'labels'}, inplace =True)
+val_data.rename(columns ={21: 'labels'}, inplace =True)
+test_data.rename(columns ={21: 'labels'}, inplace =True)
 print("shapes: train {0}, val {1}, test {2}".format(train_data.shape, val_data.shape, test_data.shape))
 
 # scale data between (0,1)
 scaled_train, scaled_val, scaled_test, train_labels, val_labels, test_labels = prepare_data(train_data, val_data, test_data)
 
-num_sensors = 113
+num_sensors = 21
 window_size = 24
 step_size = 12
 classes = 18
@@ -215,21 +215,17 @@ print('Building Model...')
 model = Sequential()
 
 model.add(BatchNormalization(input_shape=inputshape))
-model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,activation='tanh',
                  kernel_initializer='glorot_normal', name='1_conv_layer'))
-model.add(PReLU())
 
-model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,activation='tanh',
                  kernel_initializer='glorot_normal',name='2_conv_layer'))
-model.add(PReLU())
 
-model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,activation='tanh',
                  kernel_initializer='glorot_normal',name='3_conv_layer'))
-model.add(PReLU())
 
-model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,activation='tanh',
                  kernel_initializer='glorot_normal',name='4_conv_layer'))
-model.add(PReLU())
 
 model.add(Reshape((8, num_filters*num_sensors)))
 
@@ -241,7 +237,7 @@ model.add(CuDNNLSTM(num_lstm_cells,kernel_initializer='glorot_normal',return_seq
 
 model.add(Dropout(dropout_prob, name='2_dropout_layer'))
 
-model.add(Dense(64,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), name='dense_layer'))
+model.add(Dense(64,kernel_initializer='glorot_normal', activation='tanh', bias_initializer=initializers.Constant(value=0.1), name='dense_layer'))
 
 model.add(Dropout(dropout_prob, name='3_dropout_layer'))
 
@@ -268,7 +264,7 @@ score = model.evaluate(reshaped_test,test_labels,verbose=1)
 print('After {0} epochs test accuracy is: {1}'.format(train_epochs, score[1]))
 
 print('Traning model again adding validation data...')
-train_epochs = 30
+train_epochs = 50
 test_filename = './test_phase_log_1.csv'
 csv_logger_2 = CSVLogger(test_filename, separator=',', append=False)
 checkpoint_1 = ModelCheckpoint('temporary_model.h5', monitor='val_acc', verbose=1, save_best_only=True)
@@ -284,7 +280,7 @@ test_filename = './test_phase_log_2.csv'
 csv_logger_3 = CSVLogger(test_filename, separator=',', append=False)
 my_callback = My_History()
 checkpoint_2 = ModelCheckpoint(filename_model, monitor='val_acc', verbose=1, save_best_only=True)
-reduce_lr_3 = ReduceLROnPlateau(monitor='val_acc', factor=0.1, patience=5, mode='max', verbose=1, min_lr=0)
+reduce_lr_3 = ReduceLROnPlateau(monitor='val_acc', factor=0.1, patience=3, mode='max', verbose=1, min_lr=0)
 model.fit(all_train,all_labels,validation_data=(reshaped_test,test_labels),epochs=train_epochs,batch_size=batchSize,callbacks=[reduce_lr_3, csv_logger_3, my_callback, checkpoint_2],verbose=1)
 
 print('After other {0} epochs BEST test accuracy is: {1}, and BEST f1-score is {2}'.format(train_epochs, np.amax(my_callback.test_acc), np.amax(my_callback.f1_scores)))
@@ -293,4 +289,4 @@ print('After other {0} epochs BEST test accuracy is: {1}, and BEST f1-score is {
 open_file = 'results_' + str(sys.argv[1]) + '.pkl'
 print('Saving results to: ' + open_file)
 with open(open_file, 'wb') as f:
-	pk.dump([my_callback.test_acc, my_callback.f1_scores, my_callback.f1_scores_avg, my_callback.f1_scores_epoch], f)
+    pk.dump([my_callback.test_acc, my_callback.f1_scores, my_callback.f1_scores_avg, my_callback.f1_scores_epoch], f)
