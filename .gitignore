@@ -2,5 +2,7 @@
 *-checkpoint.ipynb
 *.asv
 *.h5
-taskB2/oppChallenge_gestures.data
-taskB2/OpportunityUCIDataset.zip
+*.zip
+*.data
+
+
