@@ -240,15 +240,15 @@ model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides
                  kernel_initializer='glorot_normal',name='2_conv_layer'))
 model.add(ELU())
 
-model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
-                 kernel_initializer='glorot_normal', name='3_conv_layer'))
-model.add(ELU())
+#model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                 #kernel_initializer='glorot_normal', name='3_conv_layer'))
+#model.add(ELU())
 
-model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
-                 kernel_initializer='glorot_normal',name='4_conv_layer'))
-model.add(ELU())
+#model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                 #kernel_initializer='glorot_normal',name='4_conv_layer'))
+#model.add(ELU())
 
-model.add(Reshape((8, num_filters*num_sensors)))
+model.add(Reshape((16, num_filters*num_sensors)))
 
 model.add(CuDNNLSTM(lstm_output,kernel_initializer='glorot_normal', return_sequences=True, name='1_lstm_layer'))
 
@@ -259,7 +259,7 @@ model.add(CuDNNLSTM(lstm_output,kernel_initializer='glorot_normal',return_sequen
 model.add(Dropout(dropout_prob, name='2_dropout_layer'))
 
 model.add(Dense(512,kernel_initializer='glorot_normal',
-                bias_initializer=initializers.Constant(value=0.1), activation='elu', name='dense_layer'))
+                bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer'))
 
 model.add(Dropout(dropout_prob, name='3_dropout_layer'))
 
@@ -272,8 +272,8 @@ model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy
 print(model.summary())
 
 # TRAINING OF THE MODEL
-batchSize = 300
-train_epochs = 40
+batchSize = 500
+train_epochs = 50
 train_filename = './train_phase_log.csv'
 # callbacks
 checkpoint_0 = ModelCheckpoint('temporary.h5', monitor='val_acc', verbose=1, save_best_only=True)
@@ -288,7 +288,7 @@ score = model.evaluate(reshaped_test,test_labels,verbose=1)
 print('After {0} epochs test accuracy is: {1}'.format(train_epochs, score[1]))
 
 print('Traning model again adding validation data...')
-train_epochs = 30
+train_epochs = 40
 test_filename = './test_phase_log_1.csv'
 csv_logger_2 = CSVLogger(test_filename, separator=',', append=False)
 checkpoint_1 = ModelCheckpoint('temporary_model.h5', monitor='val_acc', verbose=1, save_best_only=True)

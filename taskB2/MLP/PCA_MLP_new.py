@@ -249,10 +249,6 @@ for components, dense_layer_size in zip(n_components, dense_layer_sizes):
     reshaped_test = test_segments.reshape(-1, window_size, num_sensors, 1)
 
     # network parameters
-    kernel_layer_1 = (3,1)
-    kernel_layer_2_3 = (4,1)
-    pooling_size = (2,1)
-    kernel_strides = 1
     dropout_prob = 0.5
     inputshape = (window_size, num_sensors, 1)
 
@@ -261,25 +257,18 @@ for components, dense_layer_size in zip(n_components, dense_layer_sizes):
     model = Sequential()
 
     model.add(BatchNormalization(input_shape=inputshape))
-    model.add(Conv2D(50, kernel_size=kernel_layer_1, strides=kernel_strides,
-                     kernel_initializer='glorot_normal', name='1_conv_layer'))
-    model.add(ELU())
-    model.add(MaxPooling2D(pool_size=pooling_size))
-
-    model.add(Conv2D(40, kernel_size=kernel_layer_2_3, strides=kernel_strides,
-                     kernel_initializer='glorot_normal',name='2_conv_layer'))
-    model.add(ELU())
-    model.add(MaxPooling2D(pool_size=pooling_size))
-
-    model.add(Conv2D(30, kernel_size=kernel_layer_2_3, strides=kernel_strides,
-                     kernel_initializer='glorot_normal',name='3_conv_layer'))
-    model.add(ELU())
-    model.add(MaxPooling2D(pool_size=(1,1)))
 
     model.add(Flatten())
 
-    print('Dense layer size is: {}'.format(dense_layer_size))
-    model.add(Dense(dense_layer_size,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer'))
+    model.add(Dense(dense_layer_size,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer_1'))
+
+    model.add(Dropout(dropout_prob, name='1_dropout_layer'))
+
+    model.add(Dense(dense_layer_size,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer_2'))
+
+    model.add(Dropout(dropout_prob, name='2_dropout_layer'))
+
+    model.add(Dense(dense_layer_size,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer_3'))
 
     model.add(Dropout(dropout_prob, name='3_dropout_layer'))
 

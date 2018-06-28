@@ -19,7 +19,7 @@ if not (len(sys.argv) > 1):
 filename_model = 'best_' + str(sys.argv[1]) + '.h5'
 print('Model filename for saving is {}'.format(filename_model))
 
-is_most_freq = bool(sys.argv[2])
+is_most_freq = True
 if is_most_freq:
     print('You have chosen to select most frequent label of the window as segment label')
 
@@ -201,7 +201,7 @@ scaled_train, scaled_val, scaled_test, train_labels, val_labels, test_labels = p
 
 num_sensors = 113
 window_size = 24
-step_size = 12
+step_size = 6
 classes = 18
 
 # segment data in sliding windows of size: window_size
@@ -220,10 +220,7 @@ reshaped_val = val_segments.reshape(-1, window_size, num_sensors, 1)
 reshaped_test = test_segments.reshape(-1, window_size, num_sensors, 1)
 
 # network parameters
-size_of_kernel = (5,1)
 kernel_strides = 1
-num_filters = 64
-num_lstm_cells = 128
 dropout_prob = 0.5
 inputshape = (window_size, num_sensors, 1)
 
@@ -266,7 +263,6 @@ batchSize = 500
 train_epochs = 50
 train_filename = './train_phase_log.csv'
 # callbacks
-#reduce_lr_1 = ReduceLROnPlateau(monitor='val_acc', factor=0.1, patience=15, mode='max', verbose=1, min_lr=0)
 csv_logger_1 = CSVLogger(train_filename, separator=',', append=False)
 model.fit(reshaped_train,train_labels,validation_data=(reshaped_val,val_labels),epochs=train_epochs,batch_size=batchSize,callbacks=[csv_logger_1],verbose=1)
 
@@ -287,7 +283,7 @@ model.fit(all_train,all_labels,validation_data=(reshaped_test,test_labels),epoch
 
 print('Traning model again adding validation data...')
 model = load_model('temporary_model.h5')
-train_epochs = 40
+train_epochs = 30
 test_filename = './test_phase_log_2.csv'
 csv_logger_3 = CSVLogger(test_filename, separator=',', append=False)
 my_callback = My_History()
