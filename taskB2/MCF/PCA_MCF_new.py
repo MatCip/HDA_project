@@ -46,7 +46,7 @@ def get_most_frequent(labels):
     return values[index]
 
 def get_features_from_segment(segments):
-    num_features = 10
+    num_features = 8
     features = []
     for i in range(segments.shape[1]):
         segment = segments[:,i]
@@ -60,10 +60,7 @@ def get_features_from_segment(segments):
         mediano = np.median(segment)
         skewness = skew(segment)
         autocorr = np.correlate(segment, segment)
-        abs_fft = np.abs(np.fft.fft(segment))
-        idx_max_fft = np.argmax(abs_fft)
-        max_fft = np.max(abs_fft)
-        features.append([maxi, mini, avg, stdev, vari, mediano, skewness, autocorr, idx_max_fft, max_fft])
+        features.append([maxi, mini, avg, stdev, vari, mediano, skewness, autocorr])
 
     return np.array(features).reshape(-1, num_features*segments.shape[1])
 
@@ -221,7 +218,7 @@ for components in n_components:
                                                                                                       scaled_test, test_labels_out, window_size, step_size)
 
     # PCA + SVM elaboration
-    num_features = 10
+    num_features = 8
     new_train = train_segments.reshape(-1, num_sensors*num_features)
     new_val = val_segments.reshape(-1, num_sensors*num_features)
     new_test = test_segments.reshape(-1, num_sensors*num_features)
@@ -233,7 +230,7 @@ for components in n_components:
     scaled_train = scaler.fit_transform(all_train)
     scaled_test = scaler.transform(new_test)
 
-    pca = PCA(0.95)
+    pca = PCA(0.99)
     pca.fit(scaled_train)
     print('PCA components: {}'.format(pca.n_components_))
     pca_train = pca.transform(scaled_train)
