@@ -229,7 +229,7 @@ for components, in n_components:
     num_sensors = scaled_train.shape[1]
     print('Number of sensor channels is: {}'.format(scaled_train.shape[1]))
     window_size = 24
-    step_size = 12
+    step_size = 6
     classes = 18
     print("New shapes: train {0}, val {1}, test {2}".format(scaled_train.shape, scaled_val.shape, scaled_test.shape))
 
@@ -248,18 +248,54 @@ for components, in n_components:
     reshaped_test = test_segments.reshape(-1, window_size, num_sensors, 1)
 
     # network parameters
-    kernel_layer_1 = (3,1)
-    kernel_layer_2_3 = (4,1)
-    pooling_size = (2,1)
+    size_of_kernel = (5,1)
     kernel_strides = 1
+    num_filters = 50
     dropout_prob = 0.5
+    lstm_output = 600
     inputshape = (window_size, num_sensors, 1)
 
     # BUILDING MODEL USING KERAS AND TENSORFLOW BACKEND
     print('Building Model...')
     model = Sequential()
 
+    model.add(BatchNormalization(input_shape=inputshape))
+    model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                     kernel_initializer='glorot_normal', name='1_conv_layer'))
+    model.add(ELU())
 
+    model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                     kernel_initializer='glorot_normal',name='2_conv_layer'))
+    model.add(ELU())
+
+    model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                     kernel_initializer='glorot_normal', name='3_conv_layer'))
+    model.add(ELU())
+
+    model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                     kernel_initializer='glorot_normal',name='4_conv_layer'))
+    model.add(ELU())
+
+    model.add(Reshape((8, num_filters*num_sensors)))
+
+    model.add(CuDNNLSTM(lstm_output,kernel_initializer='glorot_normal', return_sequences=True, name='1_lstm_layer'))
+
+    model.add(Dropout(dropout_prob, name='1_dropout_layer'))
+
+    model.add(CuDNNLSTM(lstm_output,kernel_initializer='glorot_normal', return_sequences=False, name='2_lstm_layer'))
+
+    model.add(Dropout(dropout_prob, name='2_dropout_layer'))
+
+    model.add(Dense(512,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), name='dense_layer'))
+    model.add(ELU())
+
+    model.add(Dropout(dropout_prob, name='3_dropout_layer'))
+
+    model.add(Dense(classes,kernel_initializer='glorot_normal',
+                    bias_initializer=initializers.Constant(value=0.1),activation='softmax', name='softmax_layer'))
+
+    opt = optimizers.Adam(lr=0.001)
+    model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
     print(model.summary())
 
