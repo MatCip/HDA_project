@@ -13,7 +13,7 @@ data4 = load(fullfile(directory_name, 'S4-Drill.dat'));
 classes = [0 406516 406517 404516 404517 406520 404520 406505 404505 406519 404519 406511 404511 406508 404508 408512 407521 405506];
 
 % accelerometers 
-acc_columns = [5:7 23:25 32:34]; 
+acc_columns = [5:7 14:16 23:25 32:34 35:37]; 
 % 23:25 32:34 accelerometri polso
 % 14:16 35:37 accelerometri palmo
 

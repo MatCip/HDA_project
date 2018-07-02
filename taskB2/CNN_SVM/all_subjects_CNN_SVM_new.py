@@ -5,10 +5,11 @@ import sys
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import f1_score
+from sklearn.svm import SVC
 
 import keras as ke
-from keras.models import Sequential, load_model
-from keras.layers import Dense, Conv2D, MaxPooling2D, LSTM, CuDNNLSTM, Dropout, Reshape, Flatten, PReLU, ELU, BatchNormalization
+from keras.models import Sequential, load_model, Model
+from keras.layers import Dense, Conv2D, MaxPooling2D, CuDNNLSTM, Dropout, Reshape, PReLU, ELU, BatchNormalization, Flatten
 from keras import optimizers
 from keras import initializers
 from keras.callbacks import ReduceLROnPlateau, CSVLogger, ModelCheckpoint
@@ -18,6 +19,10 @@ if not (len(sys.argv) > 1):
     raise Exception('**ERROR** You must specify the output filename for your model')
 filename_model = 'best_' + str(sys.argv[1]) + '.h5'
 print('Model filename for saving is {}'.format(filename_model))
+
+is_most_freq = True
+if is_most_freq:
+    print('You have chosen to select most frequent label of the window as segment label')
 
 class My_History(ke.callbacks.Callback):
 
@@ -78,6 +83,12 @@ def slidingWindow(sequence, labels, winSize, step, noNull):
         else:
             yield segment, seg_labels
 
+def get_most_frequent(labels):
+
+    (values, counts) = np.unique(labels, return_counts=True)
+    index = np.argmax(counts)
+    return values[index]
+
 def segment_data(X_train, y_train, X_val, y_val, X_test, y_test, winSize, step, noNull=False):
     assert len(X_train) == len(y_train)
     assert len(X_val) == len(y_val)
@@ -94,7 +105,10 @@ def segment_data(X_train, y_train, X_val, y_val, X_test, y_test, winSize, step, 
         data = chunk[0]
         labels = chunk[1]
         train_segments.append(data)
-        train_labels.append(labels[-1])
+        if is_most_freq:
+            train_labels.append(get_most_frequent(labels))
+        else:
+            train_labels.append(labels[-1])
 
     val_segments = []
     val_labels = []
@@ -102,7 +116,10 @@ def segment_data(X_train, y_train, X_val, y_val, X_test, y_test, winSize, step, 
         data = chunk[0]
         labels = chunk[1]
         val_segments.append(data)
-        val_labels.append(labels[-1])
+        if is_most_freq:
+            val_labels.append(get_most_frequent(labels))
+        else:
+            val_labels.append(labels[-1])
 
     test_segments = []
     test_labels = []
@@ -110,34 +127,22 @@ def segment_data(X_train, y_train, X_val, y_val, X_test, y_test, winSize, step, 
         data = chunk[0]
         labels = chunk[1]
         test_segments.append(data)
-        test_labels.append(labels[-1])
+        if is_most_freq:
+            test_labels.append(get_most_frequent(labels))
+        else:
+            test_labels.append(labels[-1])
 
     return np.array(train_segments), np.array(train_labels), np.array(val_segments), np.array(val_labels), np.array(test_segments), np.array(test_labels)
 
 def prepare_data(train_data, val_data, test_data):
     encoder = OneHotEncoder()
-    train_labels = encoder.fit_transform(train_data['labels'].values.reshape(-1,1)).toarray()
-    val_labels = encoder.transform(val_data['labels'].values.reshape(-1,1)).toarray()
-    test_labels = encoder.transform(test_data['labels'].values.reshape(-1,1)).toarray()
+    train_labels = train_data['labels'].values
+    val_labels = val_data['labels'].values
+    test_labels = test_data['labels'].values
     scaler = MinMaxScaler(feature_range=(0, 1))
     train_data.drop(['labels'], axis=1, inplace=True)
     val_data.drop(['labels'], axis=1, inplace=True)
     test_data.drop(['labels'], axis=1, inplace=True)
-
-    # drop other columns for all Data
-    #train_data.drop([33], axis=1, inplace=True)
-    #val_data.drop([33], axis=1, inplace=True)
-    #test_data.drop([33], axis=1, inplace=True)
-    #train_data.drop([34], axis=1, inplace=True)
-    #val_data.drop([34], axis=1, inplace=True)
-    #test_data.drop([34], axis=1, inplace=True)
-    #train_data.drop([35], axis=1, inplace=True)
-    #val_data.drop([35], axis=1, inplace=True)
-    #test_data.drop([35], axis=1, inplace=True)
-
-    #train_data.columns = [idx for idx in range(110)]
-    #val_data.columns = [idx for idx in range(110)]
-    #test_data.columns = [idx for idx in range(110)]
 
     data = pd.concat([train_data,val_data,test_data])
     scaler.fit(data)
@@ -149,52 +154,65 @@ def prepare_data(train_data, val_data, test_data):
 
 print('Importing data...')
 # import train data
-adl_1_1 = pd.read_csv("../reduced_dataset/ACC/ADL1Opportunity_taskB2_S1.csv",header=None)
-adl_1_2 = pd.read_csv("../reduced_dataset/ACC/ADL2Opportunity_taskB2_S1.csv",header=None)
-adl_1_3 = pd.read_csv("../reduced_dataset/ACC/ADL3Opportunity_taskB2_S1.csv",header=None)
-adl_1_4 = pd.read_csv("../reduced_dataset/ACC/ADL4Opportunity_taskB2_S1.csv",header=None)
-adl_1_5 = pd.read_csv("../reduced_dataset/ACC/ADL5Opportunity_taskB2_S1.csv",header=None)
-drill_1 = pd.read_csv("../reduced_dataset/ACC/Drill1Opportunity_taskB2.csv",header=None)
-adl_2_1 = pd.read_csv("../reduced_dataset/ACC/ADL1Opportunity_taskB2_S2.csv",header=None)
-adl_2_2 = pd.read_csv("../reduced_dataset/ACC/ADL2Opportunity_taskB2_S2.csv",header=None)
-drill_2 = pd.read_csv("../reduced_dataset/ACC/Drill2Opportunity_taskB2.csv",header=None)
-adl_3_1 = pd.read_csv("../reduced_dataset/ACC/ADL1Opportunity_taskB2_S3.csv",header=None)
-adl_3_2 = pd.read_csv("../reduced_dataset/ACC/ADL2Opportunity_taskB2_S3.csv",header=None)
-drill_3 = pd.read_csv("../reduced_dataset/ACC/Drill3Opportunity_taskB2.csv",header=None)
+adl_1_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S1.csv",header=None)
+adl_1_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S1.csv",header=None)
+drill_1 = pd.read_csv("../full_dataset/Drill1Opportunity_taskB2.csv",header=None)
+
+adl_2_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S2.csv",header=None)
+adl_2_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S2.csv",header=None)
+drill_2 = pd.read_csv("../full_dataset/Drill2Opportunity_taskB2.csv",header=None)
+
+adl_3_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S3.csv",header=None)
+adl_3_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S3.csv",header=None)
+drill_3 = pd.read_csv("../full_dataset/Drill3Opportunity_taskB2.csv",header=None)
+
+adl_4_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S4.csv",header=None)
+adl_4_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S4.csv",header=None)
+drill_4 = pd.read_csv("../full_dataset/Drill4Opportunity_taskB2.csv",header=None)
 
 # import validation data
-adl_2_3 = pd.read_csv("../reduced_dataset/ACC/ADL3Opportunity_taskB2_S2.csv",header=None)
-adl_3_3 = pd.read_csv("../reduced_dataset/ACC/ADL3Opportunity_taskB2_S3.csv",header=None)
+adl_1_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S1.csv",header=None)
+adl_2_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S2.csv",header=None)
+adl_3_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S3.csv",header=None)
+adl_4_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S4.csv",header=None)
 
 # import test data
-adl_2_4 = pd.read_csv("../reduced_dataset/ACC/ADL4Opportunity_taskB2_S2.csv",header=None)
-adl_2_5 = pd.read_csv("../reduced_dataset/ACC/ADL5Opportunity_taskB2_S2.csv",header=None)
-adl_3_4 = pd.read_csv("../reduced_dataset/ACC/ADL4Opportunity_taskB2_S3.csv",header=None)
-adl_3_5 = pd.read_csv("../reduced_dataset/ACC/ADL5Opportunity_taskB2_S3.csv",header=None)
+adl_1_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S1.csv",header=None)
+adl_1_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S1.csv",header=None)
+adl_2_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S2.csv",header=None)
+adl_2_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S2.csv",header=None)
+adl_3_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S3.csv",header=None)
+adl_3_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S3.csv",header=None)
+adl_4_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S4.csv",header=None)
+adl_4_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S4.csv",header=None)
 
-train_frames = [adl_1_1,adl_1_2,adl_1_3,adl_1_4,adl_1_5,drill_1,adl_2_1,adl_2_2,drill_2,adl_3_1,adl_3_2,drill_3]
-val_frames = [adl_2_3,adl_3_3]
-test_frames = [adl_2_4,adl_2_5,adl_3_4,adl_3_5]
+train_frames = [adl_1_1, adl_1_2, drill_1, adl_2_1, adl_2_2, drill_2, adl_3_1, adl_3_2, drill_3, adl_4_1, adl_4_2, drill_4]
+val_frames = [adl_1_3, adl_2_3, adl_3_3, adl_4_3]
+test_frames = [adl_1_4, adl_1_5, adl_2_4, adl_2_5, adl_3_4, adl_3_5, adl_4_4, adl_4_5]
 train_data = pd.concat(train_frames)
 val_data = pd.concat(val_frames)
 test_data = pd.concat(test_frames)
-train_data.rename(columns ={9: 'labels'}, inplace =True)
-val_data.rename(columns ={9: 'labels'}, inplace =True)
-test_data.rename(columns ={9: 'labels'}, inplace =True)
+train_data.rename(columns ={113: 'labels'}, inplace =True)
+val_data.rename(columns ={113: 'labels'}, inplace =True)
+test_data.rename(columns ={113: 'labels'}, inplace =True)
 print("shapes: train {0}, val {1}, test {2}".format(train_data.shape, val_data.shape, test_data.shape))
 
 # scale data between (0,1)
 scaled_train, scaled_val, scaled_test, train_labels, val_labels, test_labels = prepare_data(train_data, val_data, test_data)
 
-num_sensors = 9
+num_sensors = 113
 window_size = 24
-step_size = 12
+step_size = 6
 classes = 18
 
 # segment data in sliding windows of size: window_size
 train_segments, train_labels, val_segments, val_labels, test_segments, test_labels = segment_data(scaled_train, train_labels, scaled_val, val_labels,
                                                                                                   scaled_test, test_labels, window_size, step_size)
 
+encoder = OneHotEncoder()
+train_labels = encoder.fit_transform(train_labels.reshape(-1,1)).toarray()
+val_labels = encoder.transform(val_labels.reshape(-1,1)).toarray()
+test_labels = encoder.transform(test_labels.reshape(-1,1)).toarray()
 print('Data has been segmented and ready...')
 
 # reshape data for network input
@@ -203,6 +221,7 @@ reshaped_val = val_segments.reshape(-1, window_size, num_sensors, 1)
 reshaped_test = test_segments.reshape(-1, window_size, num_sensors, 1)
 
 # network parameters
+kernel_strides = 1
 dropout_prob = 0.5
 inputshape = (window_size, num_sensors, 1)
 
@@ -211,21 +230,27 @@ print('Building Model...')
 model = Sequential()
 
 model.add(BatchNormalization(input_shape=inputshape))
-model.add(Conv2D(20, kernel_size=(5,1), strides=1, activation='relu',
+model.add(Conv2D(50, kernel_size=(3,1), strides=kernel_strides, activation='tanh',
                  kernel_initializer='glorot_normal', name='1_conv_layer'))
-model.add(Conv2D(20, kernel_size=(5,1), strides=1, activation='relu',
-                 kernel_initializer='glorot_normal', name='2_conv_layer'))
-
-model.add(Conv2D(40, kernel_size=(5,3), strides=(1,3), activation='relu',
-                 kernel_initializer='glorot_normal',name='3_conv_layer'))
-
 model.add(MaxPooling2D(pool_size=(2,1)))
+
+model.add(Conv2D(40, kernel_size=(4,1), strides=kernel_strides, activation='tanh',
+                 kernel_initializer='glorot_normal',name='2_conv_layer'))
+model.add(MaxPooling2D(pool_size=(2,1)))
+
+model.add(Conv2D(30, kernel_size=(4,1), strides=kernel_strides, activation='tanh',
+                 kernel_initializer='glorot_normal',name='3_conv_layer'))
+model.add(MaxPooling2D(pool_size=(1,1)))
 
 model.add(Flatten())
 
-model.add(Dense(128,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), name='dense_layer_2', activation='relu'))
+model.add(Dense(1024,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='tanh', name='dense_layer'))
 
-model.add(Dropout(dropout_prob, name='3_dropout_layer'))
+model.add(Dropout(dropout_prob, name='1_dropout_layer'))
+
+model.add(Dense(32,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='tanh', name='dense_layer_out'))
+
+model.add(Dropout(dropout_prob, name='2_dropout_layer'))
 
 model.add(Dense(classes,kernel_initializer='glorot_normal',
                 bias_initializer=initializers.Constant(value=0.1),activation='softmax', name='softmax_layer'))
@@ -236,12 +261,10 @@ model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy
 print(model.summary())
 
 # TRAINING OF THE MODEL
-batchSize = 200
+batchSize = 500
 train_epochs = 50
-train_filename = './train_phase_log.csv'
-# callbacks
-csv_logger_1 = CSVLogger(train_filename, separator=',', append=False)
-model.fit(reshaped_train,train_labels,validation_data=(reshaped_val,val_labels),epochs=train_epochs,batch_size=batchSize,callbacks=[csv_logger_1],verbose=1)
+
+model.fit(reshaped_train,train_labels,validation_data=(reshaped_val,val_labels),epochs=train_epochs,batch_size=batchSize,verbose=1)
 
 # restore best temporary_model
 print('Calculating score.. ')
@@ -249,29 +272,59 @@ score = model.evaluate(reshaped_test,test_labels,verbose=1)
 print('After {0} epochs test accuracy is: {1}'.format(train_epochs, score[1]))
 
 print('Traning model again adding validation data...')
-train_epochs = 30
-test_filename = './test_phase_log_1.csv'
-csv_logger_2 = CSVLogger(test_filename, separator=',', append=False)
+train_epochs = 40
+
 checkpoint_1 = ModelCheckpoint('temporary_model.h5', monitor='val_acc', verbose=1, save_best_only=True)
-reduce_lr_2 = ReduceLROnPlateau(monitor='val_acc', factor=0.1, patience=5, mode='max', verbose=1, min_lr=0)
+reduce_lr_2 = ReduceLROnPlateau(monitor='val_acc', factor=0.1, patience=10, mode='max', verbose=1, min_lr=0)
 all_train = np.concatenate((reshaped_train, reshaped_val))
 all_labels = np.concatenate((train_labels, val_labels))
-model.fit(all_train,all_labels,validation_data=(reshaped_test,test_labels),epochs=train_epochs,batch_size=batchSize,callbacks=[reduce_lr_2, csv_logger_2, checkpoint_1],verbose=1)
+model.fit(all_train,all_labels,validation_data=(reshaped_test,test_labels),epochs=train_epochs,batch_size=batchSize,callbacks=[reduce_lr_2, checkpoint_1],verbose=1)
 
 print('Traning model again adding validation data...')
 model = load_model('temporary_model.h5')
-train_epochs = 20
-test_filename = './test_phase_log_2.csv'
-csv_logger_3 = CSVLogger(test_filename, separator=',', append=False)
+train_epochs = 30
+
 my_callback = My_History()
 checkpoint_2 = ModelCheckpoint(filename_model, monitor='val_acc', verbose=1, save_best_only=True)
 reduce_lr_3 = ReduceLROnPlateau(monitor='val_acc', factor=0.1, patience=5, mode='max', verbose=1, min_lr=0)
-model.fit(all_train,all_labels,validation_data=(reshaped_test,test_labels),epochs=train_epochs,batch_size=batchSize,callbacks=[reduce_lr_3, csv_logger_3, my_callback, checkpoint_2],verbose=1)
+model.fit(all_train,all_labels,validation_data=(reshaped_test,test_labels),epochs=train_epochs,batch_size=batchSize,callbacks=[reduce_lr_3, my_callback, checkpoint_2],verbose=1)
 
 print('After other {0} epochs BEST test accuracy is: {1}, and BEST f1-score is {2}'.format(train_epochs, np.amax(my_callback.test_acc), np.amax(my_callback.f1_scores)))
+
+# train a one-vs-one multi-class support vector machine
+model = load_model(filename_model)
+layer_name = 'dense_layer_out'
+intermediate_layer_model = Model(inputs=model.input,
+                                 outputs=model.get_layer(layer_name).output)
+intermediate_output_train = intermediate_layer_model.predict(all_train)
+
+clf = SVC(decision_function_shape='ovr')
+clf.fit(intermediate_output_train, np.argmax(all_labels))
+
+# predict test data
+intermediate_output_test = intermediate_layer_model.predict(reshaped_test)
+svm_pred = clf.predict(intermediate_output_test)
+
+# measure accuracy and f1-score
+num = 0.0
+den = 0.0
+new_test_labels = np.argmax(test_labels)
+for pair in zip(svm_pred, new_test_labels):
+    if pair[0] == pair[1]:
+        num += 1.0
+
+    den += 1.0
+
+test_acc = num / den
+print('Test accuracy is: {}'.format(test_acc))
+f1_scores = f1_score(svm_pred, new_test_labels, average=None)
+f1 = f1_score(new_test_labels, svm_pred, average='weighted')
+print('The f1-score with sklearn function is {}'.format(f1))
+mean_f1 = np.mean(f1_scores)
+print('Average f1-score is {}'.format(mean_f1))
 
 # saving variables
 open_file = 'results_' + str(sys.argv[1]) + '.pkl'
 print('Saving results to: ' + open_file)
 with open(open_file, 'wb') as f:
-    pk.dump([my_callback.test_acc, my_callback.f1_scores, my_callback.f1_scores_avg, my_callback.f1_scores_epoch], f)
+    pk.dump([test_acc, f1, mean_f1, f1_scores], f)
