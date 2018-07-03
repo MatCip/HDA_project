@@ -14,7 +14,7 @@ from keras import initializers
 from keras.callbacks import ReduceLROnPlateau, CSVLogger, ModelCheckpoint
 from keras.utils import to_categorical
 
-is_most_freq = False
+is_most_freq = True
 if is_most_freq:
     print('You have chosen to select most frequent label of the window as segment label')
 
@@ -210,6 +210,7 @@ print("shapes: train {0}, val {1}, test {2}".format(train_data.shape, val_data.s
 
 # extracting increasing number of relevant sensory inputs
 n_components = [5, 10, 20, 40, 80]
+lstm_outputs = [128, 128, 256, 600, 600]
 data = pd.concat([train_data, val_data, test_data]).values
 data_centered = data - np.mean(data, axis=0)
 channels_by_variance = get_channels_by_decreasing_variance(data_centered)
@@ -218,7 +219,7 @@ print('Channels ordered by decreasing variance: ')
 print(channels_by_variance)
 
 f1_scores_components = []
-for components, in n_components:
+for components, lstm_output in zip(n_components, lstm_outputs):
 
     # saving filename
     filename = 'PCA_CNN_LSTM_new_' + str(components)
@@ -252,7 +253,6 @@ for components, in n_components:
     kernel_strides = 1
     num_filters = 50
     dropout_prob = 0.5
-    lstm_output = 600
     inputshape = (window_size, num_sensors, 1)
 
     # BUILDING MODEL USING KERAS AND TENSORFLOW BACKEND

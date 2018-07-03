@@ -15,7 +15,7 @@ from keras.callbacks import ReduceLROnPlateau, CSVLogger, ModelCheckpoint
 from keras.utils import to_categorical
 
 
-is_most_freq = False
+is_most_freq = True
 if is_most_freq:
     print('You have chosen to select most frequent label of the window as segment label')
 
