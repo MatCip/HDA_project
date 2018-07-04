@@ -217,30 +217,22 @@ reshaped_train = train_segments.reshape(-1, window_size, num_sensors, 1)
 reshaped_val = val_segments.reshape(-1, window_size, num_sensors, 1)
 reshaped_test = test_segments.reshape(-1, window_size, num_sensors, 1)
 
-# network parameters
-size_of_kernel = (5,1)
-kernel_strides = 1
-num_filters = 64
-lstm_output = 128
-dropout_prob = 0.5
-inputshape = (window_size, num_sensors, 1)
-
 # importing last best model
-model = load_model('./old_new/best_CNN_LSTM_new.h5')
+model = load_model('new_best_retrained.h5')
 print(model.summary())
-batchSize = 500
+batchSize = 300
 train_epochs = 10
 all_train = np.concatenate((reshaped_train, reshaped_val))
 all_labels = np.concatenate((train_labels, val_labels))
 my_callback = My_History()
-checkpoint_2 = ModelCheckpoint('new_best_retrained.h5', monitor='val_acc', verbose=1, save_best_only=True)
+checkpoint_2 = ModelCheckpoint('new_best_retrained_again.h5', monitor='val_acc', verbose=1, save_best_only=True)
 reduce_lr_3 = ReduceLROnPlateau(monitor='val_acc', factor=0.1, patience=5, mode='max', verbose=1, min_lr=0)
 model.fit(all_train,all_labels,validation_data=(reshaped_test,test_labels),epochs=train_epochs,batch_size=batchSize,callbacks=[reduce_lr_3, my_callback, checkpoint_2],verbose=1)
 
 print('After other {0} epochs BEST test accuracy is: {1}, and BEST f1-score is {2}'.format(train_epochs, np.amax(my_callback.test_acc), np.amax(my_callback.f1_scores)))
 
 # saving variables
-open_file = 'results_new_best_retrained.pkl'
+open_file = 'results_new_best_retrained_again.pkl'
 print('Saving results to: ' + open_file)
 with open(open_file, 'wb') as f:
     pk.dump([my_callback.test_acc, my_callback.f1_scores, my_callback.f1_scores_avg, my_callback.f1_scores_epoch], f)

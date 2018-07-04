@@ -14,7 +14,7 @@ from keras import initializers
 from keras.callbacks import ReduceLROnPlateau, CSVLogger, ModelCheckpoint
 from keras.utils import to_categorical
 
-is_most_freq = False
+is_most_freq = True
 if is_most_freq:
     print('You have chosen to select most frequent label of the window as segment label')
 
@@ -210,6 +210,7 @@ print("shapes: train {0}, val {1}, test {2}".format(train_data.shape, val_data.s
 
 # extracting increasing number of relevant sensory inputs
 n_components = [5, 10, 20, 40, 80]
+lstm_outputs = [128, 128, 256, 600, 600]
 data = pd.concat([train_data, val_data, test_data]).values
 data_centered = data - np.mean(data, axis=0)
 channels_by_variance = get_channels_by_decreasing_variance(data_centered)
@@ -218,7 +219,7 @@ print('Channels ordered by decreasing variance: ')
 print(channels_by_variance)
 
 f1_scores_components = []
-for components, in n_components:
+for components, lstm_output in zip(n_components, lstm_outputs):
 
     # saving filename
     filename = 'PCA_CNN_LSTM_new_' + str(components)
@@ -229,8 +230,8 @@ for components, in n_components:
     num_sensors = scaled_train.shape[1]
     print('Number of sensor channels is: {}'.format(scaled_train.shape[1]))
     window_size = 24
-    step_size = 12
-    classes = 18
+    step_size = 6
+    classes = 5
     print("New shapes: train {0}, val {1}, test {2}".format(scaled_train.shape, scaled_val.shape, scaled_test.shape))
 
     # segment data in sliding windows of size: window_size
@@ -248,10 +249,9 @@ for components, in n_components:
     reshaped_test = test_segments.reshape(-1, window_size, num_sensors, 1)
 
     # network parameters
-    kernel_layer_1 = (3,1)
-    kernel_layer_2_3 = (4,1)
-    pooling_size = (2,1)
+    size_of_kernel = (5,1)
     kernel_strides = 1
+    num_filters = 50
     dropout_prob = 0.5
     inputshape = (window_size, num_sensors, 1)
 
@@ -259,7 +259,43 @@ for components, in n_components:
     print('Building Model...')
     model = Sequential()
 
+    model.add(BatchNormalization(input_shape=inputshape))
+    model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                     kernel_initializer='glorot_normal', name='1_conv_layer'))
+    model.add(ELU())
 
+    model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                     kernel_initializer='glorot_normal',name='2_conv_layer'))
+    model.add(ELU())
+
+    model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                     kernel_initializer='glorot_normal', name='3_conv_layer'))
+    model.add(ELU())
+
+    model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                     kernel_initializer='glorot_normal',name='4_conv_layer'))
+    model.add(ELU())
+
+    model.add(Reshape((8, num_filters*num_sensors)))
+
+    model.add(CuDNNLSTM(lstm_output,kernel_initializer='glorot_normal', return_sequences=True, name='1_lstm_layer'))
+
+    model.add(Dropout(dropout_prob, name='1_dropout_layer'))
+
+    model.add(CuDNNLSTM(lstm_output,kernel_initializer='glorot_normal', return_sequences=False, name='2_lstm_layer'))
+
+    model.add(Dropout(dropout_prob, name='2_dropout_layer'))
+
+    model.add(Dense(512,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), name='dense_layer'))
+    model.add(ELU())
+
+    model.add(Dropout(dropout_prob, name='3_dropout_layer'))
+
+    model.add(Dense(classes,kernel_initializer='glorot_normal',
+                    bias_initializer=initializers.Constant(value=0.1),activation='softmax', name='softmax_layer'))
+
+    opt = optimizers.Adam(lr=0.001)
+    model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
     print(model.summary())
 

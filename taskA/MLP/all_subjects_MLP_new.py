@@ -231,15 +231,15 @@ model.add(BatchNormalization(input_shape=inputshape))
 
 model.add(Flatten())
 
-model.add(Dense(1024,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer_1'))
+model.add(Dense(1500,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer_1'))
 
 model.add(Dropout(dropout_prob, name='1_dropout_layer'))
 
-model.add(Dense(1024,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer_2'))
+model.add(Dense(1500,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer_2'))
 
 model.add(Dropout(dropout_prob, name='2_dropout_layer'))
 
-model.add(Dense(1024,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer_3'))
+model.add(Dense(1500,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer_3'))
 
 model.add(Dropout(dropout_prob, name='3_dropout_layer'))
 

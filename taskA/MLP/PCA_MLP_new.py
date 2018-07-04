@@ -222,7 +222,7 @@ f1_scores_components = []
 for components, dense_layer_size in zip(n_components, dense_layer_sizes):
 
     # saving filename
-    filename = 'PCA_CNN_DENSE_new_' + str(components)
+    filename = 'PCA_MLP_new_' + str(components)
 
     # scale data between (0,1)
     scaled_train, scaled_val, scaled_test = prepare_data(train_data, val_data, test_data, channels_by_variance[:components])
