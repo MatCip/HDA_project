@@ -159,37 +159,37 @@ def get_channels_by_decreasing_variance(data):
 
 print('Importing data...')
 # import train data
-adl_1_1 = pd.read_csv("../full_dataset/ADL1Opportunity_locomotion_S1.csv",header=None)
-adl_1_2 = pd.read_csv("../full_dataset/ADL2Opportunity_locomotion_S1.csv",header=None)
-drill_1 = pd.read_csv("../full_dataset/Drill1Opportunity_locomotion.csv",header=None)
+adl_1_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S1.csv",header=None)
+adl_1_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S1.csv",header=None)
+drill_1 = pd.read_csv("../full_dataset/Drill1Opportunity_taskB2.csv",header=None)
 
-adl_2_1 = pd.read_csv("../full_dataset/ADL1Opportunity_locomotion_S2.csv",header=None)
-adl_2_2 = pd.read_csv("../full_dataset/ADL2Opportunity_locomotion_S2.csv",header=None)
-drill_2 = pd.read_csv("../full_dataset/Drill2Opportunity_locomotion.csv",header=None)
+adl_2_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S2.csv",header=None)
+adl_2_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S2.csv",header=None)
+drill_2 = pd.read_csv("../full_dataset/Drill2Opportunity_taskB2.csv",header=None)
 
-adl_3_1 = pd.read_csv("../full_dataset/ADL1Opportunity_locomotion_S3.csv",header=None)
-adl_3_2 = pd.read_csv("../full_dataset/ADL2Opportunity_locomotion_S3.csv",header=None)
-drill_3 = pd.read_csv("../full_dataset/Drill3Opportunity_locomotion.csv",header=None)
+adl_3_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S3.csv",header=None)
+adl_3_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S3.csv",header=None)
+drill_3 = pd.read_csv("../full_dataset/Drill3Opportunity_taskB2.csv",header=None)
 
-adl_4_1 = pd.read_csv("../full_dataset/ADL1Opportunity_locomotion_S4.csv",header=None)
-adl_4_2 = pd.read_csv("../full_dataset/ADL2Opportunity_locomotion_S4.csv",header=None)
-drill_4 = pd.read_csv("../full_dataset/Drill4Opportunity_locomotion.csv",header=None)
+adl_4_1 = pd.read_csv("../full_dataset/ADL1Opportunity_taskB2_S4.csv",header=None)
+adl_4_2 = pd.read_csv("../full_dataset/ADL2Opportunity_taskB2_S4.csv",header=None)
+drill_4 = pd.read_csv("../full_dataset/Drill4Opportunity_taskB2.csv",header=None)
 
 # import validation data
-adl_1_3 = pd.read_csv("../full_dataset/ADL3Opportunity_locomotion_S1.csv",header=None)
-adl_2_3 = pd.read_csv("../full_dataset/ADL3Opportunity_locomotion_S2.csv",header=None)
-adl_3_3 = pd.read_csv("../full_dataset/ADL3Opportunity_locomotion_S3.csv",header=None)
-adl_4_3 = pd.read_csv("../full_dataset/ADL3Opportunity_locomotion_S4.csv",header=None)
+adl_1_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S1.csv",header=None)
+adl_2_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S2.csv",header=None)
+adl_3_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S3.csv",header=None)
+adl_4_3 = pd.read_csv("../full_dataset/ADL3Opportunity_taskB2_S4.csv",header=None)
 
 # import test data
-adl_1_4 = pd.read_csv("../full_dataset/ADL4Opportunity_locomotion_S1.csv",header=None)
-adl_1_5 = pd.read_csv("../full_dataset/ADL5Opportunity_locomotion_S1.csv",header=None)
-adl_2_4 = pd.read_csv("../full_dataset/ADL4Opportunity_locomotion_S2.csv",header=None)
-adl_2_5 = pd.read_csv("../full_dataset/ADL5Opportunity_locomotion_S2.csv",header=None)
-adl_3_4 = pd.read_csv("../full_dataset/ADL4Opportunity_locomotion_S3.csv",header=None)
-adl_3_5 = pd.read_csv("../full_dataset/ADL5Opportunity_locomotion_S3.csv",header=None)
-adl_4_4 = pd.read_csv("../full_dataset/ADL4Opportunity_locomotion_S4.csv",header=None)
-adl_4_5 = pd.read_csv("../full_dataset/ADL5Opportunity_locomotion_S4.csv",header=None)
+adl_1_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S1.csv",header=None)
+adl_1_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S1.csv",header=None)
+adl_2_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S2.csv",header=None)
+adl_2_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S2.csv",header=None)
+adl_3_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S3.csv",header=None)
+adl_3_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S3.csv",header=None)
+adl_4_4 = pd.read_csv("../full_dataset/ADL4Opportunity_taskB2_S4.csv",header=None)
+adl_4_5 = pd.read_csv("../full_dataset/ADL5Opportunity_taskB2_S4.csv",header=None)
 
 train_frames = [adl_1_1, adl_1_2, drill_1, adl_2_1, adl_2_2, drill_2, adl_3_1, adl_3_2, drill_3, adl_4_1, adl_4_2, drill_4]
 val_frames = [adl_1_3, adl_2_3, adl_3_3, adl_4_3]
@@ -209,8 +209,8 @@ test_data.drop(['labels'], axis=1, inplace=True)
 print("shapes: train {0}, val {1}, test {2}".format(train_data.shape, val_data.shape, test_data.shape))
 
 # extracting increasing number of relevant sensory inputs
-n_components = [5, 10, 20, 40, 80]
-lstm_outputs = [128, 128, 256, 600, 600]
+n_components = [5]
+lstm_outputs = [128]
 data = pd.concat([train_data, val_data, test_data]).values
 data_centered = data - np.mean(data, axis=0)
 channels_by_variance = get_channels_by_decreasing_variance(data_centered)
@@ -231,7 +231,7 @@ for components, lstm_output in zip(n_components, lstm_outputs):
     print('Number of sensor channels is: {}'.format(scaled_train.shape[1]))
     window_size = 24
     step_size = 6
-    classes = 5
+    classes = 18
     print("New shapes: train {0}, val {1}, test {2}".format(scaled_train.shape, scaled_val.shape, scaled_test.shape))
 
     # segment data in sliding windows of size: window_size
