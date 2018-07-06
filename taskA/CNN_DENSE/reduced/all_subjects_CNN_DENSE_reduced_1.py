@@ -189,15 +189,15 @@ test_frames = [adl_1_4, adl_1_5, adl_2_4, adl_2_5, adl_3_4, adl_3_5, adl_4_4, ad
 train_data = pd.concat(train_frames)
 val_data = pd.concat(val_frames)
 test_data = pd.concat(test_frames)
-train_data.rename(columns ={28: 'labels'}, inplace =True)
-val_data.rename(columns ={28: 'labels'}, inplace =True)
-test_data.rename(columns ={28: 'labels'}, inplace =True)
+train_data.rename(columns ={62: 'labels'}, inplace =True)
+val_data.rename(columns ={62: 'labels'}, inplace =True)
+test_data.rename(columns ={62: 'labels'}, inplace =True)
 print("shapes: train {0}, val {1}, test {2}".format(train_data.shape, val_data.shape, test_data.shape))
 
 # scale data between (0,1)
 scaled_train, scaled_val, scaled_test, train_labels, val_labels, test_labels = prepare_data(train_data, val_data, test_data)
 
-num_sensors = 28
+num_sensors = 62
 window_size = 24
 step_size = 6
 classes = 5
@@ -244,7 +244,7 @@ model.add(MaxPooling2D(pool_size=(1,1)))
 
 model.add(Flatten())
 
-model.add(Dense(128,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer'))
+model.add(Dense(512,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer'))
 
 model.add(Dropout(dropout_prob, name='3_dropout_layer'))
 

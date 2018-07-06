@@ -151,37 +151,37 @@ def prepare_data(train_data, val_data, test_data):
 
 print('Importing data...')
 # import train data
-adl_1_1 = pd.read_csv("../../reduced_dataset/IMU/ADL1Opportunity_taskB2_S1.csv",header=None)
-adl_1_2 = pd.read_csv("../../reduced_dataset/IMU/ADL2Opportunity_taskB2_S1.csv",header=None)
-drill_1 = pd.read_csv("../../reduced_dataset/IMU/Drill1Opportunity_taskB2.csv",header=None)
+adl_1_1 = pd.read_csv("../../reduced_dataset/IMU_2/ADL1Opportunity_taskB2_S1.csv",header=None)
+adl_1_2 = pd.read_csv("../../reduced_dataset/IMU_2/ADL2Opportunity_taskB2_S1.csv",header=None)
+drill_1 = pd.read_csv("../../reduced_dataset/IMU_2/Drill1Opportunity_taskB2.csv",header=None)
 
-adl_2_1 = pd.read_csv("../../reduced_dataset/IMU/ADL1Opportunity_taskB2_S2.csv",header=None)
-adl_2_2 = pd.read_csv("../../reduced_dataset/IMU/ADL2Opportunity_taskB2_S2.csv",header=None)
-drill_2 = pd.read_csv("../../reduced_dataset/ACC/Drill2Opportunity_taskB2.csv",header=None)
+adl_2_1 = pd.read_csv("../../reduced_dataset/IMU_2/ADL1Opportunity_taskB2_S2.csv",header=None)
+adl_2_2 = pd.read_csv("../../reduced_dataset/IMU_2/ADL2Opportunity_taskB2_S2.csv",header=None)
+drill_2 = pd.read_csv("../../reduced_dataset/IMU_2/Drill2Opportunity_taskB2.csv",header=None)
 
-adl_3_1 = pd.read_csv("../../reduced_dataset/IMU/ADL1Opportunity_taskB2_S3.csv",header=None)
-adl_3_2 = pd.read_csv("../../reduced_dataset/IMU/ADL2Opportunity_taskB2_S3.csv",header=None)
-drill_3 = pd.read_csv("../../reduced_dataset/IMU/Drill3Opportunity_taskB2.csv",header=None)
+adl_3_1 = pd.read_csv("../../reduced_dataset/IMU_2/ADL1Opportunity_taskB2_S3.csv",header=None)
+adl_3_2 = pd.read_csv("../../reduced_dataset/IMU_2/ADL2Opportunity_taskB2_S3.csv",header=None)
+drill_3 = pd.read_csv("../../reduced_dataset/IMU_2/Drill3Opportunity_taskB2.csv",header=None)
 
-adl_4_1 = pd.read_csv("../../reduced_dataset/IMU/ADL1Opportunity_taskB2_S4.csv",header=None)
-adl_4_2 = pd.read_csv("../../reduced_dataset/IMU/ADL2Opportunity_taskB2_S4.csv",header=None)
-drill_4 = pd.read_csv("../../reduced_dataset/IMU/Drill4Opportunity_taskB2.csv",header=None)
+adl_4_1 = pd.read_csv("../../reduced_dataset/IMU_2/ADL1Opportunity_taskB2_S4.csv",header=None)
+adl_4_2 = pd.read_csv("../../reduced_dataset/IMU_2/ADL2Opportunity_taskB2_S4.csv",header=None)
+drill_4 = pd.read_csv("../../reduced_dataset/IMU_2/Drill4Opportunity_taskB2.csv",header=None)
 
 # import validation data
-adl_1_3 = pd.read_csv("../../reduced_dataset/IMU/ADL3Opportunity_taskB2_S1.csv",header=None)
-adl_2_3 = pd.read_csv("../../reduced_dataset/IMU/ADL3Opportunity_taskB2_S2.csv",header=None)
-adl_3_3 = pd.read_csv("../../reduced_dataset/IMU/ADL3Opportunity_taskB2_S3.csv",header=None)
-adl_4_3 = pd.read_csv("../../reduced_dataset/IMU/ADL3Opportunity_taskB2_S4.csv",header=None)
+adl_1_3 = pd.read_csv("../../reduced_dataset/IMU_2/ADL3Opportunity_taskB2_S1.csv",header=None)
+adl_2_3 = pd.read_csv("../../reduced_dataset/IMU_2/ADL3Opportunity_taskB2_S2.csv",header=None)
+adl_3_3 = pd.read_csv("../../reduced_dataset/IMU_2/ADL3Opportunity_taskB2_S3.csv",header=None)
+adl_4_3 = pd.read_csv("../../reduced_dataset/IMU_2/ADL3Opportunity_taskB2_S4.csv",header=None)
 
 # import test data
-adl_1_4 = pd.read_csv("../../reduced_dataset/IMU/ADL4Opportunity_taskB2_S1.csv",header=None)
-adl_1_5 = pd.read_csv("../../reduced_dataset/IMU/ADL5Opportunity_taskB2_S1.csv",header=None)
-adl_2_4 = pd.read_csv("../../reduced_dataset/IMU/ADL4Opportunity_taskB2_S2.csv",header=None)
-adl_2_5 = pd.read_csv("../../reduced_dataset/IMU/ADL5Opportunity_taskB2_S2.csv",header=None)
-adl_3_4 = pd.read_csv("../../reduced_dataset/IMU/ADL4Opportunity_taskB2_S3.csv",header=None)
-adl_3_5 = pd.read_csv("../../reduced_dataset/IMU/ADL5Opportunity_taskB2_S3.csv",header=None)
-adl_4_4 = pd.read_csv("../../reduced_dataset/IMU/ADL4Opportunity_taskB2_S4.csv",header=None)
-adl_4_5 = pd.read_csv("../../reduced_dataset/IMU/ADL5Opportunity_taskB2_S4.csv",header=None)
+adl_1_4 = pd.read_csv("../../reduced_dataset/IMU_2/ADL4Opportunity_taskB2_S1.csv",header=None)
+adl_1_5 = pd.read_csv("../../reduced_dataset/IMU_2/ADL5Opportunity_taskB2_S1.csv",header=None)
+adl_2_4 = pd.read_csv("../../reduced_dataset/IMU_2/ADL4Opportunity_taskB2_S2.csv",header=None)
+adl_2_5 = pd.read_csv("../../reduced_dataset/IMU_2/ADL5Opportunity_taskB2_S2.csv",header=None)
+adl_3_4 = pd.read_csv("../../reduced_dataset/IMU_2/ADL4Opportunity_taskB2_S3.csv",header=None)
+adl_3_5 = pd.read_csv("../../reduced_dataset/IMU_2/ADL5Opportunity_taskB2_S3.csv",header=None)
+adl_4_4 = pd.read_csv("../../reduced_dataset/IMU_2/ADL4Opportunity_taskB2_S4.csv",header=None)
+adl_4_5 = pd.read_csv("../../reduced_dataset/IMU_2/ADL5Opportunity_taskB2_S4.csv",header=None)
 
 train_frames = [adl_1_1, adl_1_2, drill_1, adl_2_1, adl_2_2, drill_2, adl_3_1, adl_3_2, drill_3, adl_4_1, adl_4_2, drill_4]
 val_frames = [adl_1_3, adl_2_3, adl_3_3, adl_4_3]
@@ -189,15 +189,16 @@ test_frames = [adl_1_4, adl_1_5, adl_2_4, adl_2_5, adl_3_4, adl_3_5, adl_4_4, ad
 train_data = pd.concat(train_frames)
 val_data = pd.concat(val_frames)
 test_data = pd.concat(test_frames)
-train_data.rename(columns ={18: 'labels'}, inplace =True)
-val_data.rename(columns ={18: 'labels'}, inplace =True)
-test_data.rename(columns ={18: 'labels'}, inplace =True)
-print("shapes: train {0}, val {1}, test {2}".format(train_data.shape, val_data.shape, test_data.shape))
 
+train_data.rename(columns ={36: 'labels'}, inplace =True)
+val_data.rename(columns ={36: 'labels'}, inplace =True)
+test_data.rename(columns ={36: 'labels'}, inplace =True)
+print("shapes: train {0}, val {1}, test {2}".format(train_data.shape, val_data.shape, test_data.shape))
+print(train_data.head())
 # scale data between (0,1)
 scaled_train, scaled_val, scaled_test, train_labels, val_labels, test_labels = prepare_data(train_data, val_data, test_data)
 
-num_sensors = 18
+num_sensors = 36
 window_size = 24
 step_size = 6
 classes = 18
@@ -244,7 +245,7 @@ model.add(MaxPooling2D(pool_size=(1,1)))
 
 model.add(Flatten())
 
-model.add(Dense(128,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer'))
+model.add(Dense(512,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer'))
 
 model.add(Dropout(dropout_prob, name='3_dropout_layer'))
 
@@ -286,7 +287,7 @@ model.fit(all_train,all_labels,validation_data=(reshaped_test,test_labels),epoch
 print('After other {0} epochs BEST test accuracy is: {1}, and BEST f1-score is {2}'.format(train_epochs, np.amax(my_callback.test_acc), np.amax(my_callback.f1_scores)))
 
 # saving variables
-open_file = 'results_CNN_DENSE_imu.pkl'
+open_file = 'results_CNN_DENSE_IMU_2.pkl'
 print('Saving results to: ' + open_file)
 with open(open_file, 'wb') as f:
     pk.dump([my_callback.test_acc, my_callback.f1_scores, my_callback.f1_scores_avg, my_callback.f1_scores_epoch], f)

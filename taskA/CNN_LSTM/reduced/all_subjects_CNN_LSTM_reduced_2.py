@@ -218,6 +218,9 @@ reshaped_val = val_segments.reshape(-1, window_size, num_sensors, 1)
 reshaped_test = test_segments.reshape(-1, window_size, num_sensors, 1)
 
 # network parameters
+size_of_kernel = (5,1)
+num_filters = 50
+lstm_output = 600
 kernel_strides = 1
 dropout_prob = 0.5
 inputshape = (window_size, num_sensors, 1)
@@ -227,24 +230,34 @@ print('Building Model...')
 model = Sequential()
 
 model.add(BatchNormalization(input_shape=inputshape))
-model.add(Conv2D(50, kernel_size=(3,1), strides=kernel_strides,
+model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
                  kernel_initializer='glorot_normal', name='1_conv_layer'))
 model.add(ELU())
-model.add(MaxPooling2D(pool_size=(2,1)))
 
-model.add(Conv2D(40, kernel_size=(4,1), strides=kernel_strides,
+model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
                  kernel_initializer='glorot_normal',name='2_conv_layer'))
 model.add(ELU())
-model.add(MaxPooling2D(pool_size=(2,1)))
 
-model.add(Conv2D(30, kernel_size=(4,1), strides=kernel_strides,
-                 kernel_initializer='glorot_normal',name='3_conv_layer'))
+model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                 kernel_initializer='glorot_normal', name='3_conv_layer'))
 model.add(ELU())
-model.add(MaxPooling2D(pool_size=(1,1)))
 
-model.add(Flatten())
+model.add(Conv2D(num_filters, kernel_size=size_of_kernel, strides=kernel_strides,
+                 kernel_initializer='glorot_normal',name='4_conv_layer'))
+model.add(ELU())
 
-model.add(Dense(128,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), activation='relu', name='dense_layer'))
+model.add(Reshape((8, num_filters*num_sensors)))
+
+model.add(CuDNNLSTM(lstm_output,kernel_initializer='glorot_normal', return_sequences=True, name='1_lstm_layer'))
+
+model.add(Dropout(dropout_prob, name='1_dropout_layer'))
+
+model.add(CuDNNLSTM(lstm_output,kernel_initializer='glorot_normal', return_sequences=False, name='2_lstm_layer'))
+
+model.add(Dropout(dropout_prob, name='2_dropout_layer'))
+
+model.add(Dense(512,kernel_initializer='glorot_normal', bias_initializer=initializers.Constant(value=0.1), name='dense_layer'))
+model.add(ELU())
 
 model.add(Dropout(dropout_prob, name='3_dropout_layer'))
 
