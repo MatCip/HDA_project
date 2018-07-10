@@ -223,7 +223,7 @@ reshaped_test = test_segments.reshape(-1, window_size, num_sensors, 1)
 size_of_kernel = (5,1)
 kernel_strides = 1
 num_filters = 64
-lstm_output = 256
+lstm_output = 1
 dropout_prob = 0.5
 inputshape = (window_size, num_sensors, 1)
 
